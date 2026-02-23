@@ -3,8 +3,9 @@ import 'dotenv/config';
 const REQUIRED = [
   'MONGO_URI',
   'JWT_SECRET',
-  'OPENROUTER_API_KEY',
-  'OPENROUTER_MODEL',
+  'GROQ_API_KEY',
+  'GROQ_MODEL_TOPIC',
+  'GROQ_MODEL_CHAT',
 ];
 
 for (const key of REQUIRED) {
@@ -17,8 +18,9 @@ for (const key of REQUIRED) {
 export const env = {
   mongoUri:        process.env.MONGO_URI,
   jwtSecret:       process.env.JWT_SECRET,
-  openrouterKey:   process.env.OPENROUTER_API_KEY,
-  openrouterModel: process.env.OPENROUTER_MODEL,
+  groqKey:        process.env.GROQ_API_KEY,
+  groqModelTopic: process.env.GROQ_MODEL_TOPIC,
+  groqModelChat:  process.env.GROQ_MODEL_CHAT,
   port:            Number(process.env.PORT) || 4000,
   adminKey:        process.env.ADMIN_KEY || '',
 };

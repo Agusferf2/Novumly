@@ -5,8 +5,10 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './src/lib/env.js';
 import { connectDB } from './src/lib/db.js';
-import authRoutes from './src/routes/auth.js';
-import { me } from './src/controllers/authController.js';
+import authRoutes  from './src/routes/auth.js';
+import topicRoutes from './src/routes/topic.js';
+import adminRoutes from './src/routes/admin.js';
+import { me }             from './src/controllers/authController.js';
 import { authMiddleware } from './src/middleware/auth.js';
 
 const app = express();
@@ -19,13 +21,13 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() });
 });
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth',  authRoutes);
+app.use('/api/topic', topicRoutes);
+app.use('/api/admin', adminRoutes);
 app.get('/api/me', authMiddleware, me);
 // TODO: mount routes here as they're built
-// app.use('/api/topic',    topicRoutes);
 // app.use('/api/progress', progressRoutes);
 // app.use('/api/chat',     chatRoutes);
-// app.use('/api/admin',    adminRoutes);
 
 // Generic error handler
 app.use((err, _req, res, _next) => {
