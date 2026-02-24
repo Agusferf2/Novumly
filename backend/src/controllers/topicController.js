@@ -1,5 +1,6 @@
 import { User }               from '../models/User.js';
 import { UserDay }            from '../models/UserDay.js';
+import { DailyTopic }         from '../models/DailyTopic.js';
 import { getOrGenerateTopic } from '../services/topicGeneration.js';
 import { getTodayString }     from '../lib/date.js';
 
@@ -30,8 +31,15 @@ export async function getByDate(req, res, next) {
       });
     }
     const user = await User.findById(req.userId).select('feedKey');
-    const data = await buildResponse({ date, feedKey: user.feedKey, userId: req.userId });
-    res.json({ ok: true, data });
+    const topic = await DailyTopic.findOne({ date, feedKey: user.feedKey });
+    if (!topic) {
+      return res.status(404).json({
+        ok: false,
+        error: { code: 'NOT_FOUND', message: 'No topic for this date' },
+      });
+    }
+    const userDay = await UserDay.findOne({ userId: req.userId, date });
+    res.json({ ok: true, data: { ...topic.toObject(), isRead: !!userDay } });
   } catch (err) {
     next(err);
   }
