@@ -46,7 +46,7 @@ export default function BottomNav() {
 
   return (
     <nav className="flex-shrink-0 bg-white border-t border-[rgba(47,47,47,0.08)] flex">
-      {tabs.map(({ path, label }) => {
+      {tabs.map(({ path, label, Icon }) => {
         const active = pathname === path;
         return (
           <button

@@ -5,6 +5,7 @@ import Register from './pages/Register.jsx';
 import Today from './pages/Today.jsx';
 import Progress from './pages/Progress.jsx';
 import TopicByDate from './pages/TopicByDate.jsx';
+import Profile from './pages/Profile.jsx';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: '/topic/:date',
     element: <ProtectedRoute><TopicByDate /></ProtectedRoute>,
+  },
+  {
+    path: '/profile',
+    element: <ProtectedRoute><Profile /></ProtectedRoute>,
   },
 ]);
 
