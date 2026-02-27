@@ -87,13 +87,13 @@ export default function Progress() {
 
   return (
     <>
-      <div className="flex flex-col h-dvh bg-[#F4F1EA] max-w-[420px] mx-auto">
+      <div className="flex flex-col h-dvh bg-[#F4F1EA] dark:bg-[#1A1814] max-w-[420px] mx-auto">
 
         {/* Header */}
-        <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
+        <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white dark:bg-[#252220] border-b border-[rgba(47,47,47,0.08)] dark:border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center">
             <img src={logo} alt="" className="w-10 h-10 object-contain" />
-            <span className="font-title text-[27px] font-semibold text-[#2F2F2F] leading-none self-end">Teachly.</span>
+            <span className="font-title text-[27px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none self-end">Teachly.</span>
           </div>
         </header>
 
@@ -101,7 +101,7 @@ export default function Progress() {
         <main className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
 
           {/* Streak banner — compact */}
-          <div className="bg-white rounded-2xl px-5 py-3 flex items-center gap-3 border border-[rgba(47,47,47,0.06)]">
+          <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-3 flex items-center gap-3 border border-[rgba(47,47,47,0.06)] dark:border-[rgba(255,255,255,0.06)]">
             <FlameIcon />
             <div className="flex items-baseline gap-1.5">
               <span className="font-title text-2xl font-semibold text-[#BFA56A] leading-none">
@@ -114,23 +114,23 @@ export default function Progress() {
           </div>
 
           {/* Calendar card */}
-          <div className="bg-white rounded-2xl p-5">
+          <div className="bg-white dark:bg-[#252220] rounded-2xl p-5">
 
             {/* Month navigation */}
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={prevMonth}
-                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[rgba(47,47,47,0.06)] text-[#2F2F2F] text-sm"
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[rgba(47,47,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] text-[#2F2F2F] dark:text-[#EDE9E1] text-sm"
               >
                 ◀
               </button>
-              <span className="text-sm font-medium text-[#2F2F2F]">
+              <span className="text-sm font-medium text-[#2F2F2F] dark:text-[#EDE9E1]">
                 {MONTH_NAMES[month - 1]} {year}
               </span>
               <button
                 onClick={nextMonth}
                 disabled={isCurrentMonth}
-                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[rgba(47,47,47,0.06)] text-[#2F2F2F] disabled:text-[#C4BFB6] disabled:cursor-default text-sm"
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[rgba(47,47,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] text-[#2F2F2F] dark:text-[#EDE9E1] disabled:text-[#C4BFB6] dark:disabled:text-[#5A5550] disabled:cursor-default text-sm"
               >
                 ▶
               </button>
@@ -150,7 +150,7 @@ export default function Progress() {
               />
             )}
 
-            <p className="text-xs text-[#C4BFB6] text-center mt-4">
+            <p className="text-xs text-[#C4BFB6] dark:text-[#5A5550] text-center mt-4">
               Toca un día para ver el tema
             </p>
           </div>
@@ -166,22 +166,22 @@ export default function Progress() {
                   <button
                     key={t.date}
                     onClick={() => navigate(`/topic/${t.date}`)}
-                    className="w-full bg-white rounded-2xl px-4 py-3 flex items-start gap-3 text-left hover:bg-[rgba(255,255,255,0.7)] active:scale-[0.98] transition-transform"
+                    className="w-full bg-white dark:bg-[#252220] rounded-2xl px-4 py-3 flex items-start gap-3 text-left active:scale-[0.98] transition-transform"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-[10px] font-medium text-[#969B92] uppercase tracking-[0.05em]">
                           {t.primaryTag}
                         </span>
-                        <span className="text-[10px] text-[#C4BFB6]">
+                        <span className="text-[10px] text-[#C4BFB6] dark:text-[#5A5550]">
                           {formatDateShort(t.date)}
                         </span>
                       </div>
-                      <p className="text-sm font-medium text-[#2F2F2F] leading-snug line-clamp-2">
+                      <p className="text-sm font-medium text-[#2F2F2F] dark:text-[#EDE9E1] leading-snug line-clamp-2">
                         {t.title}
                       </p>
                     </div>
-                    <span className="text-[#C4BFB6] text-sm mt-0.5 flex-shrink-0">›</span>
+                    <span className="text-[#C4BFB6] dark:text-[#5A5550] text-sm mt-0.5 flex-shrink-0">›</span>
                   </button>
                 ))}
               </div>

@@ -49,10 +49,10 @@ export default function Calendar({ year, month, readDates, today, onDayClick }) 
                 isRead
                   ? 'bg-[#BFA56A] text-white font-medium'
                   : isToday
-                  ? 'ring-2 ring-[#BFA56A] ring-offset-1 text-[#2F2F2F]'
+                  ? 'ring-2 ring-[#BFA56A] ring-offset-1 ring-offset-white dark:ring-offset-[#252220] text-[#2F2F2F] dark:text-[#EDE9E1]'
                   : isFuture
-                  ? 'text-[#C4BFB6] cursor-default'
-                  : 'text-[#2F2F2F] hover:bg-[rgba(47,47,47,0.06)] active:bg-[rgba(47,47,47,0.10)]',
+                  ? 'text-[#C4BFB6] dark:text-[#5A5550] cursor-default'
+                  : 'text-[#2F2F2F] dark:text-[#EDE9E1] hover:bg-[rgba(47,47,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] active:bg-[rgba(47,47,47,0.10)] dark:active:bg-[rgba(255,255,255,0.10)]',
               ].join(' ')}
             >
               {day}

@@ -32,29 +32,29 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] flex flex-col items-center justify-center px-5">
+    <div className="min-h-screen bg-[#F4F1EA] dark:bg-[#1A1814] flex flex-col items-center justify-center px-5">
       <div className="w-full max-w-[420px] mx-auto">
         {/* Header */}
         <div className="flex items-center justify-center mb-2">
           <img src={logo} alt="Teachly" className="w-18 h-18 object-contain" />
-          <h1 className="font-title text-[42px] font-semibold text-[#2F2F2F] leading-none tracking-[-0.015em] self-end ">
+          <h1 className="font-title text-[42px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none tracking-[-0.015em] self-end ">
             Teachly
           </h1>
         </div>
-        <p className="text-center text-[#6B7280] text-base font-normal leading-[1.4] mb-8">
+        <p className="text-center text-[#6B7280] dark:text-[#9CA3AF] text-base font-normal leading-[1.4] mb-8">
           Aprendé algo nuevo cada día
         </p>
 
         {/* Card */}
-        <div className="bg-white rounded-[16px] px-6 py-8 shadow-[0_0_40px_rgba(0,0,0,0.18)]">
+        <div className="bg-white dark:bg-[#252220] rounded-[16px] px-6 py-8 shadow-[0_0_40px_rgba(0,0,0,0.18)]">
           {' '}
-          <h2 className="font-title text-[28px] font-semibold text-[#2F2F2F] text-center leading-snug tracking-[-0.01em] mb-1">
+          <h2 className="font-title text-[28px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] text-center leading-snug tracking-[-0.01em] mb-1">
             Iniciar sesión
           </h2>
           <div className="w-8 h-[2px] bg-[#BFA56A] mx-auto mb-6 rounded-full opacity-70" />
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-[#6B7280] mb-1.5 uppercase tracking-[0.04em]">
+              <label className="block text-sm font-medium text-[#6B7280] dark:text-[#9CA3AF] mb-1.5 uppercase tracking-[0.04em]">
                 Email
               </label>
               <input
@@ -62,13 +62,13 @@ export default function Login() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full h-12 px-4 bg-[#F4F1EA] border border-[rgba(47,47,47,0.12)] rounded-2xl text-[#2F2F2F] text-[17px] leading-[1.5] placeholder-[#969B92] focus:outline-none focus:border-[#BFA56A] transition-colors duration-150"
+                className="w-full h-12 px-4 bg-[#F4F1EA] dark:bg-[#1A1814] border border-[rgba(47,47,47,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-2xl text-[#2F2F2F] dark:text-[#EDE9E1] text-[17px] leading-[1.5] placeholder-[#969B92] focus:outline-none focus:border-[#BFA56A] transition-colors duration-150"
                 placeholder="tu@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#6B7280] mb-1.5 uppercase tracking-[0.04em]">
+              <label className="block text-sm font-medium text-[#6B7280] dark:text-[#9CA3AF] mb-1.5 uppercase tracking-[0.04em]">
                 Contraseña
               </label>
               <input
@@ -76,7 +76,7 @@ export default function Login() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full h-12 px-4 bg-[#F4F1EA] border border-[rgba(47,47,47,0.12)] rounded-2xl text-[#2F2F2F] text-[17px] leading-[1.5] placeholder-[#969B92] focus:outline-none focus:border-[#BFA56A] transition-colors duration-150"
+                className="w-full h-12 px-4 bg-[#F4F1EA] dark:bg-[#1A1814] border border-[rgba(47,47,47,0.12)] dark:border-[rgba(255,255,255,0.12)] rounded-2xl text-[#2F2F2F] dark:text-[#EDE9E1] text-[17px] leading-[1.5] placeholder-[#969B92] focus:outline-none focus:border-[#BFA56A] transition-colors duration-150"
                 placeholder="••••••"
               />
             </div>
@@ -98,7 +98,7 @@ export default function Login() {
         </div>
 
         {/* Footer */}
-        <p className="mt-6 text-center text-[15px] text-[#6B7280]">
+        <p className="mt-6 text-center text-[15px] text-[#6B7280] dark:text-[#9CA3AF]">
           ¿No tenés cuenta?{' '}
           <Link
             to="/register"

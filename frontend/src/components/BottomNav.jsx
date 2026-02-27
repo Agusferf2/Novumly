@@ -45,7 +45,7 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="flex-shrink-0 bg-white border-t border-[rgba(47,47,47,0.08)] flex">
+    <nav className="flex-shrink-0 bg-white dark:bg-[#252220] border-t border-[rgba(47,47,47,0.08)] dark:border-[rgba(255,255,255,0.08)] flex">
       {tabs.map(({ path, label, Icon }) => {
         const active = pathname === path;
         return (

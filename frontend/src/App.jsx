@@ -12,8 +12,8 @@ function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400">Cargando...</p>
+      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[#1A1814] flex items-center justify-center">
+        <p className="text-[#969B92]">Cargando...</p>
       </div>
     );
   }

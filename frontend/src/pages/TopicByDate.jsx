@@ -45,13 +45,13 @@ export default function TopicByDate() {
   }
 
   return (
-    <div className="flex flex-col h-dvh bg-[#F4F1EA] max-w-[420px] mx-auto">
+    <div className="flex flex-col h-dvh bg-[#F4F1EA] dark:bg-[#1A1814] max-w-[420px] mx-auto">
 
       {/* Header */}
-      <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
+      <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white dark:bg-[#252220] border-b border-[rgba(47,47,47,0.08)] dark:border-[rgba(255,255,255,0.08)]">
         <div className="flex items-center">
           <img src={logo} alt="" className="w-10 h-10 object-contain" />
-          <span className="font-title text-[27px] font-semibold text-[#2F2F2F] leading-none self-end">Teachly.</span>
+          <span className="font-title text-[27px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none self-end">Teachly.</span>
         </div>
       </header>
 
@@ -60,7 +60,7 @@ export default function TopicByDate() {
 
         {loading && (
           <div className="flex items-center justify-center h-40">
-            <p className="text-[#6B7280] text-sm">Cargando tema...</p>
+            <p className="text-[#6B7280] dark:text-[#9CA3AF] text-sm">Cargando tema...</p>
           </div>
         )}
 
@@ -73,11 +73,11 @@ export default function TopicByDate() {
         {topic && (
           <div className="space-y-5">
 
-            <span className="inline-block text-xs font-medium text-[#969B92] bg-white border border-[rgba(47,47,47,0.10)] px-3 py-1 rounded-full uppercase tracking-[0.05em]">
+            <span className="inline-block text-xs font-medium text-[#969B92] bg-white dark:bg-[#252220] border border-[rgba(47,47,47,0.10)] dark:border-[rgba(255,255,255,0.10)] px-3 py-1 rounded-full uppercase tracking-[0.05em]">
               {topic.primaryTag}
             </span>
 
-            <h1 className="font-title text-[32px] font-semibold text-[#2F2F2F] leading-tight tracking-[-0.01em]">
+            <h1 className="font-title text-[32px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-tight tracking-[-0.01em]">
               {topic.title}
             </h1>
 
@@ -86,7 +86,7 @@ export default function TopicByDate() {
               {formatDate(topic.date)}
             </p>
 
-            <div className="text-[#2F2F2F] text-[16px] leading-[1.75] space-y-4">
+            <div className="text-[#2F2F2F] dark:text-[#EDE9E1] text-[16px] leading-[1.75] space-y-4">
               {topic.resume.split('\n\n').map((p, i) => (
                 <p key={i}>{p}</p>
               ))}

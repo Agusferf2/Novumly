@@ -99,7 +99,7 @@ export default function DayBottomSheet({ date, onClose }) {
 
       {/* Sheet */}
       <div
-        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] z-50 bg-white rounded-t-3xl shadow-xl"
+        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] z-50 bg-white dark:bg-[#252220] rounded-t-3xl shadow-xl"
         style={sheetStyle}
       >
         {/* ── Drag handle area ── touch events only here ── */}
@@ -110,7 +110,7 @@ export default function DayBottomSheet({ date, onClose }) {
           onTouchEnd={onTouchEnd}
         >
           {/* Pill indicator */}
-          <div className="w-10 h-1 bg-[rgba(47,47,47,0.15)] rounded-full mx-auto" />
+          <div className="w-10 h-1 bg-[rgba(47,47,47,0.15)] dark:bg-[rgba(255,255,255,0.15)] rounded-full mx-auto" />
         </div>
 
         {/* ── Sheet content ── */}
@@ -123,7 +123,7 @@ export default function DayBottomSheet({ date, onClose }) {
             </p>
             <button
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-full text-[#969B92] hover:bg-[rgba(47,47,47,0.06)] text-lg leading-none"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-[#969B92] hover:bg-[rgba(47,47,47,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] text-lg leading-none"
               aria-label="Cerrar"
             >
               ✕
@@ -150,7 +150,7 @@ export default function DayBottomSheet({ date, onClose }) {
 
               {/* Tag + read status */}
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-medium text-[#969B92] bg-[#F4F1EA] border border-[rgba(47,47,47,0.10)] px-3 py-1 rounded-full uppercase tracking-[0.05em]">
+                <span className="text-xs font-medium text-[#969B92] bg-[#F4F1EA] dark:bg-[#1A1814] border border-[rgba(47,47,47,0.10)] dark:border-[rgba(255,255,255,0.10)] px-3 py-1 rounded-full uppercase tracking-[0.05em]">
                   {topic.primaryTag}
                 </span>
                 <span className={`text-xs font-medium px-3 py-1 rounded-full ${
@@ -163,7 +163,7 @@ export default function DayBottomSheet({ date, onClose }) {
               </div>
 
               {/* Title */}
-              <h2 className="font-title text-[22px] font-semibold text-[#2F2F2F] leading-snug text-center">
+              <h2 className="font-title text-[22px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-snug text-center">
                 {topic.title}
               </h2>
 
@@ -171,7 +171,7 @@ export default function DayBottomSheet({ date, onClose }) {
               <div className="flex flex-col gap-2 pt-2">
                 <button
                   onClick={() => { onClose(); navigate(`/topic/${date}`); }}
-                  className="w-full h-12 bg-[#2F2F2F] text-white font-medium rounded-2xl text-[15px]"
+                  className="w-full h-12 bg-[#2F2F2F] dark:bg-[#EDE9E1] text-white dark:text-[#2F2F2F] font-medium rounded-2xl text-[15px]"
                 >
                   Ver tema completo
                 </button>
@@ -179,7 +179,7 @@ export default function DayBottomSheet({ date, onClose }) {
                   href={googleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full h-12 flex items-center justify-center border border-[rgba(47,47,47,0.15)] text-[#2F2F2F] font-medium rounded-2xl text-[15px] hover:bg-[rgba(47,47,47,0.04)]"
+                  className="w-full h-12 flex items-center justify-center border border-[rgba(47,47,47,0.15)] dark:border-[rgba(255,255,255,0.15)] text-[#2F2F2F] dark:text-[#EDE9E1] font-medium rounded-2xl text-[15px] hover:bg-[rgba(47,47,47,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)]"
                 >
                   Buscar en Google
                 </a>
