@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/apiClient.js';
-import { useAuth } from '../context/AuthContext.jsx';
 import Calendar from '../components/Calendar.jsx';
 import DayBottomSheet from '../components/DayBottomSheet.jsx';
+import BottomNav from '../components/BottomNav.jsx';
 import logo from '../../assets/Logo.png';
 
 const MONTH_NAMES = [
@@ -28,7 +28,6 @@ function formatDateShort(dateStr) {
 }
 
 export default function Progress() {
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const now = new Date();
@@ -55,7 +54,6 @@ export default function Progress() {
   }, []);
 
   useEffect(() => {
-    setLoadingMonth(true);
     apiFetch(`/api/progress/month?year=${year}&month=${month}`)
       .then(data => setReadDates(data.readDates))
       .catch(() => setReadDates([]))
@@ -63,6 +61,7 @@ export default function Progress() {
   }, [year, month]);
 
   function prevMonth() {
+    setLoadingMonth(true);
     if (month === 1) { setYear(y => y - 1); setMonth(12); }
     else setMonth(m => m - 1);
   }
@@ -70,6 +69,7 @@ export default function Progress() {
   function nextMonth() {
     const isCurrentMonth = year === now.getFullYear() && month === now.getMonth() + 1;
     if (isCurrentMonth) return;
+    setLoadingMonth(true);
     if (month === 12) { setYear(y => y + 1); setMonth(1); }
     else setMonth(m => m + 1);
   }
@@ -81,18 +81,10 @@ export default function Progress() {
       <div className="flex flex-col h-dvh bg-[#F4F1EA] max-w-[420px] mx-auto">
 
         {/* Header */}
-        <header className="flex-shrink-0 flex items-center justify-between px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
+        <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
           <div className="flex items-center">
             <img src={logo} alt="" className="w-10 h-10 object-contain" />
             <span className="font-title text-[27px] font-semibold text-[#2F2F2F] leading-none self-end">Teachly.</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-[#6B7280]">Progreso</span>
-            <div className="w-8 h-8 rounded-full bg-[#969B92] flex items-center justify-center">
-              <span className="text-white text-xs font-medium">
-                {user?.email?.[0]?.toUpperCase() ?? '?'}
-              </span>
-            </div>
           </div>
         </header>
 
@@ -189,6 +181,8 @@ export default function Progress() {
 
           <div className="h-2" />
         </main>
+
+        <BottomNav />
       </div>
 
       {/* Bottom sheet — outside scroll container so it overlays correctly */}

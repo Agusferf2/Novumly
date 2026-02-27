@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { apiFetch } from '../lib/apiClient.js';
-import { useAuth } from '../context/AuthContext.jsx';
 import KeyPoints from '../components/KeyPoints.jsx';
 import ChatDock from '../components/ChatDock.jsx';
+import BottomNav from '../components/BottomNav.jsx';
 import logo from '../../assets/Logo.png';
 
 function formatDate(dateStr) {
@@ -15,7 +15,6 @@ function formatDate(dateStr) {
 }
 
 export default function Today() {
-  const { user } = useAuth();
   const [topic,   setTopic]   = useState(null);
   const [isRead,  setIsRead]  = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,18 +48,10 @@ export default function Today() {
     <div className="flex flex-col h-dvh bg-[#F4F1EA] max-w-[420px] mx-auto">
 
       {/* Header fijo */}
-      <header className="flex-shrink-0 flex items-center justify-between px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
+      <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
         <div className="flex items-center">
           <img src={logo} alt="" className="w-10 h-10 object-contain" />
           <span className="font-title text-[27px] font-semibold text-[#2F2F2F] leading-none self-end">Teachly.</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-[#6B7280]">Hoy</span>
-          <div className="w-8 h-8 rounded-full bg-[#969B92] flex items-center justify-center">
-            <span className="text-white text-xs font-medium">
-              {user?.email?.[0]?.toUpperCase() ?? '?'}
-            </span>
-          </div>
         </div>
       </header>
 
@@ -130,6 +121,7 @@ export default function Today() {
       </main>
 
       {topic && <ChatDock topic={topic} />}
+      <BottomNav />
 
     </div>
   );

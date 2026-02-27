@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { apiFetch } from '../lib/apiClient.js';
-import { useAuth } from '../context/AuthContext.jsx';
 import KeyPoints from '../components/KeyPoints.jsx';
+import BottomNav from '../components/BottomNav.jsx';
 import logo from '../../assets/Logo.png';
 
 function formatDate(dateStr) {
@@ -16,8 +16,6 @@ function formatDate(dateStr) {
 
 export default function TopicByDate() {
   const { date } = useParams();
-  const { user } = useAuth();
-  const navigate = useNavigate();
 
   const [topic,   setTopic]   = useState(null);
   const [isRead,  setIsRead]  = useState(false);
@@ -50,22 +48,10 @@ export default function TopicByDate() {
     <div className="flex flex-col h-dvh bg-[#F4F1EA] max-w-[420px] mx-auto">
 
       {/* Header */}
-      <header className="flex-shrink-0 flex items-center justify-between px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate('/progress')}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-[#969B92] hover:bg-[rgba(47,47,47,0.06)] text-lg leading-none"
-            aria-label="Volver"
-          >
-            ←
-          </button>
+      <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white border-b border-[rgba(47,47,47,0.08)]">
+        <div className="flex items-center">
           <img src={logo} alt="" className="w-10 h-10 object-contain" />
           <span className="font-title text-[27px] font-semibold text-[#2F2F2F] leading-none self-end">Teachly.</span>
-        </div>
-        <div className="w-8 h-8 rounded-full bg-[#969B92] flex items-center justify-center">
-          <span className="text-white text-xs font-medium">
-            {user?.email?.[0]?.toUpperCase() ?? '?'}
-          </span>
         </div>
       </header>
 
@@ -120,6 +106,8 @@ export default function TopicByDate() {
           </div>
         )}
       </main>
+
+      <BottomNav />
     </div>
   );
 }
