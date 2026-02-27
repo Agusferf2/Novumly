@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { apiFetch } from '../lib/apiClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import KeyPoints from '../components/KeyPoints.jsx';
+import ChatDock from '../components/ChatDock.jsx';
 import logo from '../../assets/Logo.png';
 
 function formatDate(dateStr) {
@@ -128,25 +129,7 @@ export default function Today() {
         )}
       </main>
 
-      {/* Chat dock — placeholder (Fase 5) */}
-      <div className="flex-shrink-0 bg-white border-t border-[rgba(47,47,47,0.08)] px-5 pt-3 pb-5">
-        <p className="text-xs text-[#969B92] mb-1">¿Tienes alguna pregunta sobre el tema? Házmela aquí...</p>
-        <p className="text-xs text-[#BFA56A] mb-3">5 preguntas restantes hoy · Chat limitado</p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            disabled
-            placeholder="Escribe tu pregunta..."
-            className="flex-1 h-10 px-3 bg-[#F4F1EA] border border-[rgba(47,47,47,0.12)] rounded-xl text-sm placeholder-[#C4BFB6]"
-          />
-          <button
-            disabled
-            className="h-10 px-4 bg-[#969B92] text-white text-sm font-medium rounded-xl opacity-40"
-          >
-            Enviar
-          </button>
-        </div>
-      </div>
+      {topic && <ChatDock topic={topic} />}
 
     </div>
   );

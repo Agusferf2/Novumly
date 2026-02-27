@@ -84,6 +84,60 @@ Cada keyPoint debe aportar contexto o consecuencia, no repetir el resumen.
 primaryTag: una sola palabra o dos.
 topicKey: derivado del title, sin tildes ni signos.` 
 
+export async function chatWithGroq({ topic, history, question }) {
+  const keyPointsText = topic.keyPoints
+    .map(kp => `- ${kp.title}: ${kp.content}`)
+    .join('\n');
+
+  const systemPrompt = `Sos un asistente educativo dentro de la app Teachly. Ayudás a los usuarios a entender el tema del día respondiendo sus preguntas de forma clara y concisa en español.
+
+Tema del día: ${topic.title}
+Categoría: ${topic.primaryTag}
+
+Resumen:
+${topic.resume}
+
+Puntos clave:
+${keyPointsText}
+
+Reglas:
+- Respondé solo preguntas relacionadas con el tema del día.
+- Si la pregunta no tiene relación, indicá amablemente que solo podés responder sobre el tema de hoy.
+- Respuestas cortas y claras (máximo 3 párrafos).
+- Usá español neutro y tono amable.`;
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...history.map(m => ({ role: m.role, content: m.content })),
+    { role: 'user', content: question },
+  ];
+
+  const response = await fetch(GROQ_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.groqKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: env.groqModelChat,
+      messages,
+      max_tokens: 600,
+      temperature: 0.7,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Groq chat error ${response.status}: ${text}`);
+  }
+
+  const json = await response.json();
+  const content = json.choices?.[0]?.message?.content;
+  if (!content) throw new Error('Empty response from Groq chat');
+
+  return content.trim();
+}
+
 export async function generateTopic({ date, recentTitles = [] }) {
   const avoidLine = recentTitles.length > 0
     ? `\nTemas recientes a NO repetir: ${recentTitles.join(', ')}.`

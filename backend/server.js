@@ -9,6 +9,7 @@ import authRoutes     from './src/routes/auth.js';
 import topicRoutes    from './src/routes/topic.js';
 import adminRoutes    from './src/routes/admin.js';
 import progressRoutes from './src/routes/progress.js';
+import chatRoutes     from './src/routes/chat.js';
 import { me }             from './src/controllers/authController.js';
 import { authMiddleware } from './src/middleware/auth.js';
 
@@ -27,7 +28,7 @@ app.use('/api/topic', topicRoutes);
 app.use('/api/admin', adminRoutes);
 app.get('/api/me', authMiddleware, me);
 app.use('/api/progress', progressRoutes);
-// TODO: app.use('/api/chat', chatRoutes);
+app.use('/api/chat',     chatRoutes);
 
 // Generic error handler
 app.use((err, _req, res, _next) => {
