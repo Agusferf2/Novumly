@@ -3,40 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/apiClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
+import {
+  FlameIcon, CheckIcon,
+  ScienceIcon, BulbIcon, LeafIcon,
+  SunIcon, MoonIcon, LogoutIcon,
+} from '../components/Icons.jsx';
 import BottomNav from '../components/BottomNav.jsx';
 import logo from '../../assets/Logo.png';
-
-const IC = '#8B6F47'; // warm brown for preference icons
-
-function ScienceIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke={IC} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 3h6M9 3v7l-4 9a1 1 0 0 0 .9 1.4h12.2A1 1 0 0 0 21 19l-4-9V3" />
-      <path d="M9 12h6" />
-    </svg>
-  );
-}
-
-function BulbIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke={IC} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 21h6M10 21v-1a5 5 0 1 1 4 0v1" />
-      <path d="M9.5 14.5A5 5 0 0 1 9 12" />
-    </svg>
-  );
-}
-
-function LeafIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke={IC} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 5.3-1 10-4 12.5C13.5 16 12 17 11 20z" />
-      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-    </svg>
-  );
-}
 
 const PREFERENCES = [
   { Icon: ScienceIcon, label: 'Ciencia' },
@@ -53,24 +26,6 @@ function getLast9Dates() {
     const day = String(d.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
   });
-}
-
-function FlameIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-         stroke="#BFA56A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-         stroke="#BFA56A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
 }
 
 export default function Profile() {
@@ -136,7 +91,7 @@ export default function Profile() {
           <p className="text-sm font-semibold text-[#2F2F2F] dark:text-[#EDE9E1]">Racha</p>
 
           <div className="flex items-center gap-2">
-            <FlameIcon />
+            <FlameIcon size={22} />
             <span className="font-title text-[18px] font-semibold text-[#BFA56A]">
               {streak === null ? '—' : streak} {streak === 1 ? 'día seguido' : 'días seguidos'}
             </span>
@@ -155,12 +110,7 @@ export default function Profile() {
                       : 'bg-[#F4F1EA] dark:bg-[#1A1814] border border-[rgba(47,47,47,0.12)] dark:border-[rgba(255,255,255,0.12)]'
                     }`}
                 >
-                  {read && (
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                         stroke="#BFA56A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
+                  {read && <CheckIcon size={12} />}
                 </div>
               );
             })}
@@ -208,11 +158,7 @@ export default function Profile() {
               }`}
             >
               <div className="w-8 h-8 rounded-full bg-[#F4F1EA] border border-[rgba(47,47,47,0.12)] flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                     stroke={theme === 'light' ? '#BFA56A' : '#969B92'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-                </svg>
+                <SunIcon color={theme === 'light' ? '#BFA56A' : '#969B92'} />
               </div>
               <span className={`text-xs font-medium ${theme === 'light' ? 'text-[#BFA56A]' : 'text-[#969B92]'}`}>Claro</span>
             </button>
@@ -227,10 +173,7 @@ export default function Profile() {
               }`}
             >
               <div className="w-8 h-8 rounded-full bg-[#2F2F2F] flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                     stroke={theme === 'dark' ? '#BFA56A' : '#969B92'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
+                <MoonIcon color={theme === 'dark' ? '#BFA56A' : '#969B92'} />
               </div>
               <span className={`text-xs font-medium ${theme === 'dark' ? 'text-[#BFA56A]' : 'text-[#969B92]'}`}>Oscuro</span>
             </button>
@@ -251,12 +194,7 @@ export default function Profile() {
           onClick={handleLogout}
           className="w-full bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 flex items-center gap-3 text-left active:opacity-70 transition-opacity"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-               stroke="#C05050" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
+          <LogoutIcon />
           <span className="text-sm font-medium text-[#C05050]">Cerrar sesión</span>
         </button>
 

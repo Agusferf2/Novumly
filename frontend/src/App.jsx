@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
+import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Today from './pages/Today.jsx';
@@ -22,7 +23,7 @@ function ProtectedRoute({ children }) {
 }
 
 const router = createBrowserRouter([
-  { path: '/',         element: <Navigate to="/today" replace /> },
+  { path: '/',         element: <Landing /> },
   { path: '/login',    element: <Login /> },
   { path: '/register', element: <Register /> },
   {
