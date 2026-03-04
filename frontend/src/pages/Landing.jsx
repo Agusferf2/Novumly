@@ -2,7 +2,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FlameIcon, ChatIcon, CalendarIcon, CheckIcon } from '../components/Icons.jsx';
 import logo from '../../assets/Logo.png';
-import character from '../../assets/teachly_character-removebg-preview.png';
+import character from '../../assets/Novumly_character.png';
 
 const FEATURES = [
   { icon: <FlameIcon size={15} />,    label: 'Racha diaria' },
@@ -29,7 +29,7 @@ export default function Landing() {
       <header className="flex items-center justify-center pt-8 pb-1">
         <img src={logo} alt="" className="w-15 h-15 object-contain" />
         <span className="font-title text-[36px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none self-end">
-          Teachly.
+          Novumly.
         </span>
       </header>
 

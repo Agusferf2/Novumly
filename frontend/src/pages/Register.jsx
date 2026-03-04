@@ -44,9 +44,9 @@ export default function Register() {
 
         {/* Header */}
         <div className="flex items-center justify-center mb-2">
-          <img src={logo} alt="Teachly" className="w-18 h-18 object-contain" />
+          <img src={logo} alt="Novumly" className="w-18 h-18 object-contain" />
           <h1 className="font-title text-[42px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none tracking-[-0.015em] self-end">
-            Teachly
+            Novumly
           </h1>
         </div>
         <p className="text-center text-[#6B7280] dark:text-[#9CA3AF] text-base font-normal leading-[1.4] mb-8">Creá tu cuenta y empezá a aprender</p>

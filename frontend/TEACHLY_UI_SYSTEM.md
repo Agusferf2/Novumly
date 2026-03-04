@@ -1,4 +1,4 @@
-# TEACHLY — UI SYSTEM
+# NOVUMLY — UI SYSTEM
 Version 1.0
 Mobile-First Only
 
@@ -6,7 +6,7 @@ Mobile-First Only
 
 ## 🎯 Identidad
 
-Teachly es un diario personal de aprendizaje.
+Novumly es un diario personal de aprendizaje.
 Debe sentirse íntimo, cálido y reflexivo.
 
 No es:

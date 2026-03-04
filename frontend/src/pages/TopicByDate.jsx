@@ -51,7 +51,7 @@ export default function TopicByDate() {
       <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white dark:bg-[#252220] border-b border-[rgba(47,47,47,0.08)] dark:border-[rgba(255,255,255,0.08)]">
         <div className="flex items-center">
           <img src={logo} alt="" className="w-10 h-10 object-contain" />
-          <span className="font-title text-[27px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none self-end">Teachly.</span>
+          <span className="font-title text-[27px] font-semibold text-[#2F2F2F] dark:text-[#EDE9E1] leading-none self-end">Novumly.</span>
         </div>
       </header>
 

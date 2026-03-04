@@ -1,4 +1,4 @@
-# Teachly — App de Aprendizaje Diario (PWA)
+# Novumly — App de Aprendizaje Diario (PWA)
 
 Aplicación web **mobile-first (PWA)** donde el usuario recibe un tema educativo nuevo cada día, en formato narrativo, con posibilidad de hacer preguntas y visualizar su progreso.
 
@@ -47,7 +47,7 @@ Aplicación web **mobile-first (PWA)** donde el usuario recibe un tema educativo
 Monorepo:
 
 ```bash
-teachly/
+novumly/
   frontend/
   backend/
   README.md

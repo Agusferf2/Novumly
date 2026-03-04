@@ -2,7 +2,7 @@ import { env } from '../lib/env.js';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-const SYSTEM_PROMPT = `Sos Teachly, una app de aprendizaje diario en español. Tu tarea es generar el tema del día.
+const SYSTEM_PROMPT = `Sos Novumly, una app de aprendizaje diario en español. Tu tarea es generar el tema del día.
 
 REGLAS DE ENFOQUE (MUY IMPORTANTES)
 
@@ -89,7 +89,7 @@ export async function chatWithGroq({ topic, history, question }) {
     .map(kp => `- ${kp.title}: ${kp.content}`)
     .join('\n');
 
-  const systemPrompt = `Sos un asistente educativo dentro de la app Teachly. Ayudás a los usuarios a entender el tema del día respondiendo sus preguntas de forma clara y concisa en español.
+  const systemPrompt = `Sos un asistente educativo dentro de la app Novumly. Ayudás a los usuarios a entender el tema del día respondiendo sus preguntas de forma clara y concisa en español.
 
 Tema del día: ${topic.title}
 Categoría: ${topic.primaryTag}
