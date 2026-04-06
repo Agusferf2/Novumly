@@ -5,6 +5,7 @@ import Calendar from '../components/Calendar.jsx';
 import DayBottomSheet from '../components/DayBottomSheet.jsx';
 import BottomNav from '../components/BottomNav.jsx';
 import { FlameIcon } from '../components/Icons.jsx';
+import Loader from '../components/Loader.jsx';
 import logo from '../../assets/Logo.png';
 
 const MONTH_NAMES = [
@@ -130,7 +131,7 @@ export default function Progress() {
 
             {loadingMonth ? (
               <div className="h-40 flex items-center justify-center">
-                <p className="text-[#969B92] text-sm">Cargando...</p>
+                <Loader size="sm" />
               </div>
             ) : (
               <Calendar

@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
+import Loader from './components/Loader.jsx';
 import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
@@ -14,7 +15,7 @@ function ProtectedRoute({ children }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F4F1EA] dark:bg-[#1A1814] flex items-center justify-center">
-        <p className="text-[#969B92]">Cargando...</p>
+        <Loader />
       </div>
     );
   }

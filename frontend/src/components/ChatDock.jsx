@@ -216,8 +216,10 @@ export default function ChatDock({ topic }) {
 
             {sending && (
               <div className="flex justify-start">
-                <div className="bg-[#F4F1EA] dark:bg-[#1A1814] px-3 py-2.5 rounded-2xl rounded-bl-sm text-sm text-[#969B92]">
-                  Escribiendo...
+                <div className="bg-[#F4F1EA] dark:bg-[#1A1814] px-4 py-3 rounded-2xl rounded-bl-sm flex items-center gap-1.5">
+                  <span className="loader-dot" style={{ animationDelay: '0ms' }} />
+                  <span className="loader-dot" style={{ animationDelay: '150ms' }} />
+                  <span className="loader-dot" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             )}

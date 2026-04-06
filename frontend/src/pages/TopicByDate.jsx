@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { apiFetch } from '../lib/apiClient.js';
 import KeyPoints from '../components/KeyPoints.jsx';
 import BottomNav from '../components/BottomNav.jsx';
+import Loader from '../components/Loader.jsx';
 import logo from '../../assets/Logo.png';
 
 function formatDate(dateStr) {
@@ -59,8 +60,8 @@ export default function TopicByDate() {
       <main className="flex-1 overflow-y-auto px-5 py-6">
 
         {loading && (
-          <div className="flex items-center justify-center h-40">
-            <p className="text-[#6B7280] dark:text-[#9CA3AF] text-sm">Cargando tema...</p>
+          <div className="flex items-center justify-center h-48">
+            <Loader label="Un momento..." />
           </div>
         )}
 
