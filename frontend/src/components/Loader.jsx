@@ -1,5 +1,3 @@
-import loaderImg from '../../assets/loaderIMG.png';
-
 export default function Loader({ size = 'default', label }) {
   if (size === 'sm') {
     return (
@@ -13,13 +11,6 @@ export default function Loader({ size = 'default', label }) {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 loader-fade-in">
-
-      <img
-        src={loaderImg}
-        alt=""
-        className="w-44 h-auto select-none pointer-events-none mix-blend-multiply dark:mix-blend-normal"
-        draggable="false"
-      />
 
       <div className="flex items-center gap-1.5">
         <span className="loader-dot" style={{ animationDelay: '0ms' }} />
