@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    assetsInlineLimit: 200 * 1024, // inline assets < 200KB como base64 → sin request de red
+  },
   plugins: [
     react(),
     tailwindcss(),

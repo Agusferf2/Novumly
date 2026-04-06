@@ -61,7 +61,7 @@ export default function Today() {
 
         {loading && (
           <div className="flex items-center justify-center h-48">
-            <Loader label="Un momento..." />
+            <Loader label="Generando el tema del día" />
           </div>
         )}
 
