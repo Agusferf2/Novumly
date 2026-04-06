@@ -12,7 +12,7 @@ import adminRoutes    from './src/routes/admin.js';
 import progressRoutes from './src/routes/progress.js';
 import chatRoutes     from './src/routes/chat.js';
 
-import { me } from './src/controllers/authController.js';
+import { me, updateMe } from './src/controllers/authController.js';
 import { authMiddleware } from './src/middleware/auth.js';
 
 const app = express();
@@ -48,6 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/topic', topicRoutes);
 app.use('/api/admin', adminRoutes);
 app.get('/api/me', authMiddleware, me);
+app.patch('/api/me', authMiddleware, updateMe);
 app.use('/api/progress', progressRoutes);
 app.use('/api/chat', chatRoutes);
 

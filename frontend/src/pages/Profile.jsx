@@ -6,15 +6,20 @@ import { useTheme } from '../context/ThemeContext.jsx';
 import {
   FlameIcon, CheckIcon,
   ScienceIcon, BulbIcon, LeafIcon,
+  BookIcon, ChipIcon, PaletteIcon, HeartIcon, SearchIcon,
   SunIcon, MoonIcon, LogoutIcon,
 } from '../components/Icons.jsx';
 import BottomNav from '../components/BottomNav.jsx';
 import logo from '../../assets/Logo.png';
 
 const PREFERENCES = [
-  { Icon: ScienceIcon, label: 'Ciencia' },
-  { Icon: BulbIcon,    label: 'Innovación' },
-  { Icon: LeafIcon,    label: 'Naturaleza' },
+  { key: 'historia',   Icon: BookIcon,    label: 'Historia' },
+  { key: 'ciencia',    Icon: ScienceIcon, label: 'Ciencia' },
+  { key: 'tecnologia', Icon: ChipIcon,    label: 'Tecnología' },
+  { key: 'medicina',   Icon: HeartIcon,   label: 'Medicina' },
+  { key: 'arte',       Icon: PaletteIcon, label: 'Arte y Cultura' },
+  { key: 'naturaleza', Icon: LeafIcon,    label: 'Naturaleza' },
+  { key: 'conceptos',  Icon: SearchIcon,  label: 'Conceptos' },
 ];
 
 function getLast9Dates() {
@@ -29,7 +34,7 @@ function getLast9Dates() {
 }
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -41,6 +46,40 @@ export default function Profile() {
   const now = new Date();
   const [streak,    setStreak]    = useState(null);
   const [readDates, setReadDates] = useState([]);
+
+  const [isEditing,  setIsEditing]  = useState(false);
+  const [selected,   setSelected]   = useState(() => user?.interests ?? []);
+  const [saving,     setSaving]     = useState(false);
+  const [saveError,  setSaveError]  = useState(null);
+  const [savedOk,    setSavedOk]    = useState(false);
+
+  function toggleCategory(key) {
+    setSelected(prev => {
+      if (prev.includes(key)) {
+        if (prev.length === 1) return prev;
+        return prev.filter(k => k !== key);
+      }
+      return [...prev, key];
+    });
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await apiFetch('/api/me', {
+        method: 'PATCH',
+        body: JSON.stringify({ interests: selected }),
+      });
+      await refreshUser();
+      setIsEditing(false);
+      setSavedOk(true);
+    } catch {
+      setSaveError('No se pudo guardar. Intentá de nuevo.');
+    } finally {
+      setSaving(false);
+    }
+  }
 
   useEffect(() => {
     apiFetch('/api/progress/streak')
@@ -122,26 +161,58 @@ export default function Profile() {
         {/* Preferencias card */}
         <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-[#2F2F2F] dark:text-[#EDE9E1]">Preferencias</p>
-            <button className="text-xs font-medium text-[#BFA56A]">Editar</button>
+            <div>
+              <p className="text-sm font-semibold text-[#2F2F2F] dark:text-[#EDE9E1]">Preferencias</p>
+              {isEditing && (
+                <p className="text-xs text-[#969B92] mt-0.5">Elegí al menos 1 categoría</p>
+              )}
+            </div>
+            <button
+              onClick={isEditing ? handleSave : () => { setIsEditing(true); setSelected(user?.interests ?? []); setSaveError(null); }}
+              disabled={saving}
+              className="text-xs font-medium text-[#BFA56A] disabled:opacity-50 min-h-[44px] px-1"
+            >
+              {isEditing ? (saving ? 'Guardando...' : 'Guardar') : 'Editar'}
+            </button>
           </div>
 
           <div className="space-y-0">
-            {PREFERENCES.map(({ Icon, label }, i) => (
-              <div
-                key={label}
-                className={`flex items-center justify-between py-3 ${
-                  i < PREFERENCES.length - 1 ? 'border-b border-[rgba(47,47,47,0.06)] dark:border-[rgba(255,255,255,0.06)]' : ''
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon />
-                  <span className="text-sm text-[#2F2F2F] dark:text-[#EDE9E1]">{label}</span>
-                </div>
-                <CheckIcon />
-              </div>
-            ))}
+            {PREFERENCES.map(({ key, Icon, label }, i) => {
+              const isSelected = isEditing
+                ? selected.includes(key)
+                : (user?.interests?.includes(key) ?? false);
+              return (
+                <button
+                  key={key}
+                  onClick={() => isEditing && toggleCategory(key)}
+                  disabled={!isEditing}
+                  className={`w-full flex items-center justify-between py-3 text-left transition-opacity ${
+                    i < PREFERENCES.length - 1
+                      ? 'border-b border-[rgba(47,47,47,0.06)] dark:border-[rgba(255,255,255,0.06)]'
+                      : ''
+                  } ${isEditing && !isSelected ? 'opacity-40' : 'opacity-100'}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon />
+                    <span className="text-sm text-[#2F2F2F] dark:text-[#EDE9E1]">{label}</span>
+                  </div>
+                  {isSelected && <CheckIcon />}
+                </button>
+              );
+            })}
           </div>
+
+          {saveError && (
+            <p className="text-xs text-[#C05050]">{saveError}</p>
+          )}
+
+          {!isEditing && savedOk && (
+            <p className="text-xs text-[#BFA56A]">Tus preferencias se aplicarán a partir de mañana.</p>
+          )}
+
+          {!isEditing && !savedOk && (user?.interests?.length ?? 0) === 0 && (
+            <p className="text-xs text-[#969B92]">Tocá "Editar" para elegir tus categorías.</p>
+          )}
         </div>
 
         {/* Apariencia */}

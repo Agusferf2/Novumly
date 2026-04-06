@@ -7,6 +7,12 @@ export function getTodayString() {
   return toDateString(new Date());
 }
 
+export function getTomorrowString() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return toDateString(d);
+}
+
 /**
  * Converts any Date to "YYYY-MM-DD" in the project timezone.
  */

@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User.js';
 import { env } from '../lib/env.js';
+import { VALID_INTERESTS, computeFeedKey } from '../lib/categories.js';
+import { getTomorrowString } from '../lib/date.js';
 
 function signToken(userId) {
   return jwt.sign({ userId }, env.jwtSecret, { expiresIn: '30d' });
@@ -79,14 +81,45 @@ export async function login(req, res, next) {
 
 export async function me(req, res, next) {
   try {
-    const user = await User.findById(req.userId).select('email feedKey');
+    const user = await User.findById(req.userId).select('email feedKey interests feedKeyAppliesDate');
     if (!user) {
       return res.status(404).json({
         ok: false,
         error: { code: 'NOT_FOUND', message: 'User not found' },
       });
     }
-    res.json({ ok: true, data: { email: user.email, feedKey: user.feedKey } });
+    res.json({ ok: true, data: { email: user.email, feedKey: user.feedKey, interests: user.interests, feedKeyAppliesDate: user.feedKeyAppliesDate } });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateMe(req, res, next) {
+  try {
+    const { interests } = req.body;
+
+    if (!Array.isArray(interests) || interests.length === 0) {
+      return res.status(400).json({
+        ok: false,
+        error: { code: 'VALIDATION_ERROR', message: 'interests debe ser un array con al menos 1 categoría' },
+      });
+    }
+
+    const invalid = interests.filter(i => !VALID_INTERESTS.includes(i));
+    if (invalid.length > 0) {
+      return res.status(400).json({
+        ok: false,
+        error: { code: 'VALIDATION_ERROR', message: `Categorías inválidas: ${invalid.join(', ')}` },
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { interests, feedKeyAppliesDate: getTomorrowString() },
+      { new: true, select: 'email feedKey interests feedKeyAppliesDate' }
+    );
+
+    res.json({ ok: true, data: { email: user.email, feedKey: user.feedKey, interests: user.interests, feedKeyAppliesDate: user.feedKeyAppliesDate } });
   } catch (err) {
     next(err);
   }

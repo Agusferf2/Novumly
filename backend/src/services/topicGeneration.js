@@ -1,7 +1,7 @@
 import { DailyTopic } from '../models/DailyTopic.js';
 import { generateTopic } from './openrouter.js';
 
-export async function getOrGenerateTopic({ date, feedKey = 'global' }) {
+export async function getOrGenerateTopic({ date, feedKey = 'global', interests = [] }) {
   // Return existing topic if already generated
   const existing = await DailyTopic.findOne({ date, feedKey });
   if (existing) return existing;
@@ -15,7 +15,7 @@ export async function getOrGenerateTopic({ date, feedKey = 'global' }) {
   const recentTitles = recent.map(t => t.title);
 
   // Generate with AI
-  const generated = await generateTopic({ date, recentTitles });
+  const generated = await generateTopic({ date, recentTitles, interests });
 
   // Save and return — if a concurrent request already saved it (race condition / E11000), fetch it
   try {

@@ -112,6 +112,29 @@ export function LeafIcon({ size = 20, color = '#8B6F47' }) {
   );
 }
 
+export function HeartIcon({ size = 20, color = '#8B6F47' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+         fill="none" stroke={color} strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
+export function SearchIcon({ size = 20, color = '#8B6F47' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+         fill="none" stroke={color} strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <line x1="11" y1="8" x2="11" y2="14" />
+      <line x1="8" y1="11" x2="14" y2="11" />
+    </svg>
+  );
+}
+
 export function SunIcon({ size = 16, color = '#969B92' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24"
@@ -129,6 +152,55 @@ export function MoonIcon({ size = 16, color = '#969B92' }) {
          fill="none" stroke={color} strokeWidth="2"
          strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
+
+export function BookIcon({ size = 20, color = '#8B6F47' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+         fill="none" stroke={color} strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 6c0-1.1.9-2 2-2h7v16H4a2 2 0 0 1-2-2V6z" />
+      <path d="M22 6c0-1.1-.9-2-2-2h-7v16h7a2 2 0 0 0 2-2V6z" />
+      <line x1="12" y1="4" x2="12" y2="20" />
+    </svg>
+  );
+}
+
+export function ChipIcon({ size = 20, color = '#8B6F47' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+         fill="none" stroke={color} strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round">
+      <rect x="7" y="7" width="10" height="10" rx="1" />
+      <path d="M7 9H5M7 12H5M7 15H5M17 9h2M17 12h2M17 15h2M9 7V5M12 7V5M15 7V5M9 17v2M12 17v2M15 17v2" />
+    </svg>
+  );
+}
+
+export function PaletteIcon({ size = 20, color = '#8B6F47' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+         fill="none" stroke={color} strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2v-.5c0-.28-.22-.5-.5-.5H12c-2.76 0-5-2.24-5-5C7 7.92 9.24 5 12 5c4.42 0 8 2.91 8 6.5 0 2.49-1.79 4.5-4 4.5-1.1 0-2-.9-2-2 0-.55-.45-1-1-1s-1 .45-1 1v2.5" />
+      <circle cx="8.5" cy="11.5" r="1" fill={color} stroke="none" />
+      <circle cx="10.5" cy="8" r="1" fill={color} stroke="none" />
+      <circle cx="14.5" cy="8" r="1" fill={color} stroke="none" />
+    </svg>
+  );
+}
+
+export function ThinkIcon({ size = 20, color = '#8B6F47' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24"
+         fill="none" stroke={color} strokeWidth="1.8"
+         strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2a7 7 0 0 1 7 7c0 3-1.5 5.5-4 6.8V18H9v-2.2C6.5 14.5 5 12 5 9a7 7 0 0 1 7-7z" />
+      <line x1="9" y1="21" x2="15" y2="21" />
+      <circle cx="12" cy="9" r="1.5" fill={color} stroke="none" />
     </svg>
   );
 }

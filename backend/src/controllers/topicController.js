@@ -3,18 +3,28 @@ import { UserDay }            from '../models/UserDay.js';
 import { DailyTopic }         from '../models/DailyTopic.js';
 import { getOrGenerateTopic } from '../services/topicGeneration.js';
 import { getTodayString }     from '../lib/date.js';
+import { computeFeedKey }     from '../lib/categories.js';
 
-async function buildResponse({ date, feedKey, userId }) {
-  const topic  = await getOrGenerateTopic({ date, feedKey });
+async function buildResponse({ date, feedKey, interests, userId }) {
+  const topic  = await getOrGenerateTopic({ date, feedKey, interests });
   const userDay = await UserDay.findOne({ userId, date });
   return { ...topic.toObject(), isRead: !!userDay };
 }
 
 export async function getToday(req, res, next) {
   try {
-    const user = await User.findById(req.userId).select('feedKey');
+    const user = await User.findById(req.userId).select('feedKey interests feedKeyAppliesDate');
     const date = getTodayString();
-    const data = await buildResponse({ date, feedKey: user.feedKey, userId: req.userId });
+
+    // Aplicar feedKey pendiente si ya llegó la fecha
+    let { feedKey, interests } = user;
+    interests = interests ?? [];
+    if (user.feedKeyAppliesDate && user.feedKeyAppliesDate <= date) {
+      feedKey = computeFeedKey(interests);
+      await User.updateOne({ _id: req.userId }, { feedKey, feedKeyAppliesDate: null });
+    }
+
+    const data = await buildResponse({ date, feedKey, interests, userId: req.userId });
     res.json({ ok: true, data });
   } catch (err) {
     next(err);

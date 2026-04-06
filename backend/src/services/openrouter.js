@@ -1,4 +1,5 @@
 import { env } from '../lib/env.js';
+import { CATEGORIES } from '../lib/categories.js';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
@@ -138,12 +139,16 @@ Reglas:
   return content.trim();
 }
 
-export async function generateTopic({ date, recentTitles = [] }) {
+export async function generateTopic({ date, recentTitles = [], interests = [] }) {
   const avoidLine = recentTitles.length > 0
     ? `\nTemas recientes a NO repetir: ${recentTitles.join(', ')}.`
     : '';
 
-  const userPrompt = `Generá un tema educativo para el día ${date}.${avoidLine}`;
+  const interestsLine = interests.length > 0
+    ? `\nEl tema DEBE pertenecer a alguna de estas categorías: ${interests.map(i => CATEGORIES[i]?.prompt ?? i).join(', ')}. No generes temas fuera de estas categorías.`
+    : '';
+
+  const userPrompt = `Generá un tema educativo para el día ${date}.${avoidLine}${interestsLine}`;
 
   const response = await fetch(GROQ_URL, {
     method: 'POST',
