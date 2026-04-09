@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiFetch } from '../lib/apiClient.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import KeyPoints from '../components/KeyPoints.jsx';
 import ChatDock from '../components/ChatDock.jsx';
 import BottomNav from '../components/BottomNav.jsx';
@@ -16,6 +17,7 @@ function formatDate(dateStr) {
 }
 
 export default function Today() {
+  const { user } = useAuth();
   const [topic,   setTopic]   = useState(null);
   const [isRead,  setIsRead]  = useState(false);
   const [loading, setLoading] = useState(true);
@@ -83,7 +85,9 @@ export default function Today() {
 
             {/* Tag */}
             <span className="inline-block text-xs font-medium text-[#969B92] bg-white dark:bg-[#252220] border border-[rgba(47,47,47,0.10)] dark:border-[rgba(255,255,255,0.10)] px-3 py-1 rounded-full uppercase tracking-[0.05em]">
-              {topic.primaryTag}
+              {(user?.interests?.length > 0 && !user.interests.map(i => i.toLowerCase()).includes(topic.primaryTag.toLowerCase()))
+                ? user.interests[0]
+                : topic.primaryTag}
             </span>
 
             {/* Título */}

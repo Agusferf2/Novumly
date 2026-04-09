@@ -1,26 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiFetch } from '../lib/apiClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
-import {
-  FlameIcon, CheckIcon,
-  ScienceIcon, BulbIcon, LeafIcon,
-  BookIcon, ChipIcon, PaletteIcon, HeartIcon, SearchIcon,
-  SunIcon, MoonIcon, LogoutIcon,
-} from '../components/Icons.jsx';
+import { FlameIcon, CheckIcon, SunIcon, MoonIcon, LogoutIcon } from '../components/Icons.jsx';
 import BottomNav from '../components/BottomNav.jsx';
+import PreferencesCard from '../components/PreferencesCard.jsx';
+import { apiFetch } from '../lib/apiClient.js';
 import logo from '../../assets/Logo.png';
-
-const PREFERENCES = [
-  { key: 'historia',   Icon: BookIcon,    label: 'Historia' },
-  { key: 'ciencia',    Icon: ScienceIcon, label: 'Ciencia' },
-  { key: 'tecnologia', Icon: ChipIcon,    label: 'Tecnología' },
-  { key: 'medicina',   Icon: HeartIcon,   label: 'Medicina' },
-  { key: 'arte',       Icon: PaletteIcon, label: 'Arte y Cultura' },
-  { key: 'naturaleza', Icon: LeafIcon,    label: 'Naturaleza' },
-  { key: 'conceptos',  Icon: SearchIcon,  label: 'Conceptos' },
-];
 
 function getLast9Dates() {
   return Array.from({ length: 9 }, (_, i) => {
@@ -34,52 +20,13 @@ function getLast9Dates() {
 }
 
 export default function Profile() {
-  const { user, logout, refreshUser } = useAuth();
+  const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-
-  function handleLogout() {
-    logout();
-    navigate('/login');
-  }
 
   const now = new Date();
   const [streak,    setStreak]    = useState(null);
   const [readDates, setReadDates] = useState([]);
-
-  const [isEditing,  setIsEditing]  = useState(false);
-  const [selected,   setSelected]   = useState(() => user?.interests ?? []);
-  const [saving,     setSaving]     = useState(false);
-  const [saveError,  setSaveError]  = useState(null);
-  const [savedOk,    setSavedOk]    = useState(false);
-
-  function toggleCategory(key) {
-    setSelected(prev => {
-      if (prev.includes(key)) {
-        if (prev.length === 1) return prev;
-        return prev.filter(k => k !== key);
-      }
-      return [...prev, key];
-    });
-  }
-
-  async function handleSave() {
-    setSaving(true);
-    setSaveError(null);
-    try {
-      await apiFetch('/api/me', {
-        method: 'PATCH',
-        body: JSON.stringify({ interests: selected }),
-      });
-      await refreshUser();
-      setIsEditing(false);
-      setSavedOk(true);
-    } catch {
-      setSaveError('No se pudo guardar. Intentá de nuevo.');
-    } finally {
-      setSaving(false);
-    }
-  }
 
   useEffect(() => {
     apiFetch('/api/progress/streak')
@@ -91,6 +38,11 @@ export default function Profile() {
       .catch(() => setReadDates([]));
   }, []);
 
+  function handleLogout() {
+    logout();
+    navigate('/login');
+  }
+
   const displayName = user?.email
     ? user.email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
     : '—';
@@ -101,7 +53,6 @@ export default function Profile() {
   return (
     <div className="flex flex-col h-dvh bg-[#F4F1EA] dark:bg-[#1A1814] max-w-[420px] mx-auto">
 
-      {/* Header */}
       <header className="flex-shrink-0 flex items-center justify-center px-5 py-2 bg-white dark:bg-[#252220] border-b border-[rgba(47,47,47,0.08)] dark:border-[rgba(255,255,255,0.08)]">
         <div className="flex items-center">
           <img src={logo} alt="" className="w-10 h-10 object-contain" />
@@ -109,7 +60,6 @@ export default function Profile() {
         </div>
       </header>
 
-      {/* Scrollable content */}
       <main className="flex-1 overflow-y-auto px-5 py-6 space-y-4">
 
         {/* User card */}
@@ -128,98 +78,38 @@ export default function Profile() {
         {/* Racha card */}
         <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 space-y-3">
           <p className="text-sm font-semibold text-[#2F2F2F] dark:text-[#EDE9E1]">Racha</p>
-
           <div className="flex items-center gap-2">
             <FlameIcon size={22} />
             <span className="font-title text-[18px] font-semibold text-[#BFA56A]">
               {streak === null ? '—' : streak} {streak === 1 ? 'día seguido' : 'días seguidos'}
             </span>
           </div>
-
-          {/* Last 9 days dots */}
           <div className="flex items-center gap-1.5">
             {last9.map(date => {
               const read = readSet.has(date);
               return (
                 <div
                   key={date}
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs
-                    ${read
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${
+                    read
                       ? 'bg-[rgba(191,165,106,0.15)] border border-[#BFA56A]'
                       : 'bg-[#F4F1EA] dark:bg-[#1A1814] border border-[rgba(47,47,47,0.12)] dark:border-[rgba(255,255,255,0.12)]'
-                    }`}
+                  }`}
                 >
                   {read && <CheckIcon size={12} />}
                 </div>
               );
             })}
           </div>
-
           <p className="text-xs text-[#C4BFB6] dark:text-[#5A5550]">Racha máxima: — días</p>
         </div>
 
-        {/* Preferencias card */}
-        <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold text-[#2F2F2F] dark:text-[#EDE9E1]">Preferencias</p>
-              {isEditing && (
-                <p className="text-xs text-[#969B92] mt-0.5">Elegí al menos 1 categoría</p>
-              )}
-            </div>
-            <button
-              onClick={isEditing ? handleSave : () => { setIsEditing(true); setSelected(user?.interests ?? []); setSaveError(null); }}
-              disabled={saving}
-              className="text-xs font-medium text-[#BFA56A] disabled:opacity-50 min-h-[44px] px-1"
-            >
-              {isEditing ? (saving ? 'Guardando...' : 'Guardar') : 'Editar'}
-            </button>
-          </div>
-
-          <div className="space-y-0">
-            {PREFERENCES.map(({ key, Icon, label }, i) => {
-              const isSelected = isEditing
-                ? selected.includes(key)
-                : (user?.interests?.includes(key) ?? false);
-              return (
-                <button
-                  key={key}
-                  onClick={() => isEditing && toggleCategory(key)}
-                  disabled={!isEditing}
-                  className={`w-full flex items-center justify-between py-3 text-left transition-opacity ${
-                    i < PREFERENCES.length - 1
-                      ? 'border-b border-[rgba(47,47,47,0.06)] dark:border-[rgba(255,255,255,0.06)]'
-                      : ''
-                  } ${isEditing && !isSelected ? 'opacity-40' : 'opacity-100'}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon />
-                    <span className="text-sm text-[#2F2F2F] dark:text-[#EDE9E1]">{label}</span>
-                  </div>
-                  {isSelected && <CheckIcon />}
-                </button>
-              );
-            })}
-          </div>
-
-          {saveError && (
-            <p className="text-xs text-[#C05050]">{saveError}</p>
-          )}
-
-          {!isEditing && savedOk && (
-            <p className="text-xs text-[#BFA56A]">Tus preferencias se aplicarán a partir de mañana.</p>
-          )}
-
-          {!isEditing && !savedOk && (user?.interests?.length ?? 0) === 0 && (
-            <p className="text-xs text-[#969B92]">Tocá "Editar" para elegir tus categorías.</p>
-          )}
-        </div>
+        <PreferencesCard />
 
         {/* Apariencia */}
         <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 space-y-3">
           <p className="text-sm font-semibold text-[#2F2F2F] dark:text-[#EDE9E1]">Apariencia</p>
           <div className="flex gap-3">
-            {/* Light */}
             <button
               onClick={() => setTheme('light')}
               className={`flex-1 flex flex-col items-center gap-2 py-3 rounded-xl transition-colors ${
@@ -233,8 +123,6 @@ export default function Profile() {
               </div>
               <span className={`text-xs font-medium ${theme === 'light' ? 'text-[#BFA56A]' : 'text-[#969B92]'}`}>Claro</span>
             </button>
-
-            {/* Dark */}
             <button
               onClick={() => setTheme('dark')}
               className={`flex-1 flex flex-col items-center gap-2 py-3 rounded-xl transition-colors ${
@@ -254,7 +142,6 @@ export default function Profile() {
         {/* Notificaciones */}
         <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 flex items-center justify-between">
           <p className="text-sm text-[#2F2F2F] dark:text-[#EDE9E1]">Notificaciones</p>
-          {/* Toggle — hardcoded off */}
           <div className="w-11 h-6 bg-[rgba(47,47,47,0.15)] dark:bg-[rgba(255,255,255,0.15)] rounded-full relative cursor-default">
             <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white dark:bg-[#EDE9E1] rounded-full shadow-sm" />
           </div>

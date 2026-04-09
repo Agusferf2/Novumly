@@ -4,6 +4,7 @@ import { User } from '../models/User.js';
 import { env } from '../lib/env.js';
 import { VALID_INTERESTS, computeFeedKey } from '../lib/categories.js';
 import { getTomorrowString } from '../lib/date.js';
+import { validateCategory } from '../services/openrouter.js';
 
 function signToken(userId) {
   return jwt.sign({ userId }, env.jwtSecret, { expiresIn: '30d' });
@@ -94,9 +95,27 @@ export async function me(req, res, next) {
   }
 }
 
+export async function validateCategoryController(req, res, next) {
+  try {
+    const { name } = req.body;
+    if (!name || typeof name !== 'string' || name.trim().length < 2) {
+      return res.status(400).json({
+        ok: false,
+        error: { code: 'VALIDATION_ERROR', message: 'Nombre inválido' },
+      });
+    }
+    const result = await validateCategory(name.trim());
+    res.json({ ok: true, data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function updateMe(req, res, next) {
   try {
     const { interests } = req.body;
+
+    const MAX_INTERESTS = 5;
 
     if (!Array.isArray(interests) || interests.length === 0) {
       return res.status(400).json({
@@ -105,11 +124,18 @@ export async function updateMe(req, res, next) {
       });
     }
 
-    const invalid = interests.filter(i => !VALID_INTERESTS.includes(i));
+    if (interests.length > MAX_INTERESTS) {
+      return res.status(400).json({
+        ok: false,
+        error: { code: 'VALIDATION_ERROR', message: `Podés elegir hasta ${MAX_INTERESTS} categorías` },
+      });
+    }
+
+    const invalid = interests.filter(i => typeof i !== 'string' || !i.trim() || i.length > 60);
     if (invalid.length > 0) {
       return res.status(400).json({
         ok: false,
-        error: { code: 'VALIDATION_ERROR', message: `Categorías inválidas: ${invalid.join(', ')}` },
+        error: { code: 'VALIDATION_ERROR', message: 'Una o más categorías tienen formato inválido' },
       });
     }
 

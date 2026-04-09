@@ -10,7 +10,7 @@ export const CATEGORIES = {
   naturaleza: { label: 'Naturaleza',     prompt: 'Naturaleza' },
   conceptos:  {
     label: 'Conceptos',
-    prompt: 'Conceptos (elegí una palabra o término interesante — puede ser científico, filosófico, cotidiano o de jerga — y explicá su origen etimológico, su significado real y su trasfondo cultural o histórico)',
+    prompt: 'Conceptos (elegí una palabra o término interesante o desconocido — puede ser científico, filosófico, cotidiano o de jerga — y explicá su origen etimológico, su significado real y su trasfondo cultural o histórico)',
   },
 };
 

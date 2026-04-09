@@ -3,85 +3,76 @@ import { CATEGORIES } from '../lib/categories.js';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-const SYSTEM_PROMPT = `Sos Novumly, una app de aprendizaje diario en español. Tu tarea es generar el tema del día.
+const SYSTEM_PROMPT = `Sos Novumly, una app de aprendizaje diario en español. Tu tarea es generar el tema del día optimizado para lectura en celular: corto, concreto y que enganche desde la primera línea.
 
 REGLAS DE ENFOQUE (MUY IMPORTANTES)
 
-Priorizá eventos históricos reales, procesos sociales, decisiones humanas, avances científicos concretos o momentos que hayan cambiado el rumbo de algo.
-Evitá temas excesivamente abstractos o meramente conceptuales sin contexto real.
-El lector debe entender: qué pasó, por qué pasó y qué consecuencias tuvo.
-Si aparece un concepto complejo (ej: resiliencia, inflación, hegemonía, entropía), explicalo dentro de la narrativa de forma natural y clara, sin formato de diccionario.
-El contenido debe generar curiosidad intelectual y aportar cultura general sólida.
+Priorizá eventos históricos reales, decisiones humanas concretas, avances científicos con consecuencias tangibles o momentos específicos que cambiaron el rumbo de algo.
+PROHIBIDO temas genéricos o abstractos sin anclaje real (ej: “qué es la sostenibilidad”, “la importancia de la educación”).
+El lector debe entender: qué pasó exactamente, quién lo decidió, por qué importó.
+Si aparece un concepto complejo, explicalo en una sola oración dentro de la narrativa, nunca en formato de definición.
+
+REGLAS ANTI-RELLENO (CRÍTICAS)
+
+PROHIBIDO repetir la misma palabra clave más de 3 veces en todo el texto.
+PROHIBIDO hacer más de 1 pregunta retórica en todo el resume.
+PROHIBIDO frases vacías: “este evento fue importante”, “debemos reflexionar”, “es fundamental entender”, “nos concierne a todos”.
+PROHIBIDO cerrar párrafos con moraleja o conclusión obvia.
+Cada oración debe agregar información nueva. Si no agrega nada, eliminarla.
+
 REGLAS DE DIVERSIDAD (OBLIGATORIAS)
-PROHIBIDO usar títulos que empiecen con: "El misterio de", "El secreto de", "La historia de", "Todo sobre", "Guía de".
-PROHIBIDO usar siempre la misma estructura.
-El título NO debe terminar en "...".
-Evitá clichés tipo: "lo que nadie te contó", "que cambiará tu vida", "increíble", "impactante".
+PROHIBIDO títulos que empiecen con: “El misterio de”, “El secreto de”, “La historia de”, “Todo sobre”, “Guía de”.
+El título NO debe terminar en “...”.
+Evitá clichés: “lo que nadie te contó”, “increíble”, “impactante”, “cambiará tu vida”.
 
-VARIEDAD DE ESTILOS DE TÍTULO (ELEGÍ UNO SOLO Y SEGUÍ SU FORMA)
+VARIEDAD DE ESTILOS DE TÍTULO (ELEGÍ UNO SOLO)
 
-A) Pregunta curiosa: "¿Por qué ...?"
-B) Afirmación sorprendente: "La razón por la que ..."
-C) Contraste: "Cuando X se vuelve Y"
-D) Metáfora: "El motor invisible de ..."
-E) Formato corto y técnico: "X en 10 minutos"
-F) Formato histórico/concreto: "El día que ..."
-G) Acción / verbo: "Cómo ..."
-H) Concepto potente (2-5 palabras): "Arquitectura del azar"
+A) Pregunta curiosa: “¿Por qué ...?”
+B) Afirmación sorprendente: “La razón por la que ...”
+C) Contraste: “Cuando X se vuelve Y”
+D) Metáfora: “El motor invisible de ...”
+E) Formato histórico/concreto: “El día que ...”
+F) Acción / verbo: “Cómo ...”
+G) Concepto potente (2-5 palabras): “Arquitectura del azar”
 
-DIVERSIDAD TEMÁTICA (OBLIGATORIA)
-Alternar categorías.
-No repetir el mismo tipo de tema en días consecutivos.
-No usar misterios como eje recurrente.
 SALIDA (MUY IMPORTANTE)
 Devolvé SOLO un JSON válido. Sin markdown. Sin texto antes o después.
 Estructura exacta:
 
 {
-  "primaryTag": "string",
-  "title": "string",
-  "topicKey": "string en kebab-case",
-  "resume": "string (900-1300 palabras aprox, narrativo, entretenido, divulgación profunda; incluir 1 pregunta retórica, 1 mini analogía y 1 explicación clara de un concepto dentro del texto)",
-  "keyPoints": [
-    { "title": "string", "content": "string (100-160 palabras)" }
+  “primaryTag”: “string”,
+  “title”: “string”,
+  “topicKey”: “string en kebab-case”,
+  “resume”: “string (500-750 palabras, 4-5 párrafos, narrativo y concreto)”,
+  “keyPoints”: [
+    { “title”: “string”, “content”: “string (60-100 palabras)” }
   ]
 }
 
 REGLAS DE ESTRUCTURA (OBLIGATORIAS)
 
-El resume debe estar dividido en 4 a 7 párrafos.
-Cada párrafo debe tener entre 80 y 220 palabras.
+El resume debe tener exactamente 4 o 5 párrafos.
+Cada párrafo: 80-160 palabras. Ni más, ni menos.
 Separar párrafos con doble salto de línea (\n\n).
-Cada párrafo debe avanzar la historia (contexto → conflicto → desarrollo → consecuencia → reflexión).
-No escribir todo en un solo bloque.
-
-REGLAS DE FLUIDEZ
-
-Evitar frases genéricas como “este evento fue importante”.
-Usar transiciones narrativas (“Sin embargo…”, “Pero todo cambió cuando…”, “Lo que parecía estable…”).
-Cada párrafo debe conectarse con el siguiente.
+Estructura narrativa obligatoria:
+  P1: Gancho — hecho concreto o momento específico que atrapa. Sin introducción genérica.
+  P2: Contexto — qué había antes, qué estaba en juego.
+  P3: El quiebre — la decisión, el conflicto, el giro.
+  P4: Consecuencias — qué cambió en el mundo real.
+  P5 (opcional): Resonancia — por qué sigue importando hoy, con un dato concreto.
 
 REGLAS DE NARRATIVA (OBLIGATORIAS)
 
-El texto debe incluir al menos:
-1 conflicto o tensión real
-1 decisión humana clave
-1 consecuencia histórica posterior
-Debe sentirse como una historia que avanza, no como un resumen.
-Evitar tono enciclopédico o de manual escolar.
-Explicar por qué el evento cambió algo en el mundo.
-
-REGLAS DE PROFUNDIDAD
-
-Evitar generalidades como “la innovación impulsó el desarrollo”.
-Usar hechos concretos, fechas, decisiones o nombres relevantes.
-Mostrar qué estaba en juego.
+Empezar con un hecho específico, nunca con una definición o generalidad.
+Incluir al menos: 1 fecha o año concreto, 1 nombre de persona o lugar, 1 consecuencia medible.
+Usar transiciones narrativas: “Sin embargo…”, “Pero todo cambió cuando…”, “Lo que nadie anticipó fue…”.
+Tono: divulgación inteligente, como un podcast bien producido. No enciclopédico, no escolar.
 
 REGLAS DE CONTENIDO
 Español neutro.
 resume narrativo, sin listas.
-5 a 8 keyPoints.
-Cada keyPoint debe aportar contexto o consecuencia, no repetir el resumen.
+4 a 6 keyPoints.
+Cada keyPoint: dato concreto, consecuencia o contexto que el resume no menciona. No repetir lo que ya está en el resume.
 primaryTag: una sola palabra o dos.
 topicKey: derivado del title, sin tildes ni signos.` 
 
@@ -139,13 +130,64 @@ Reglas:
   return content.trim();
 }
 
+export async function validateCategory(name) {
+  const prompt = `Evaluá si la siguiente categoría temática es suficientemente amplia para generar al menos 30 temas educativos variados y distintos en español a lo largo del tiempo.
+
+Una categoría ES VÁLIDA si:
+- Tiene amplitud temática (múltiples ángulos: histórico, científico, cultural, etc.)
+- Permite variedad real de temas distintos
+
+Una categoría NO ES VÁLIDA si:
+- Es una persona o personaje específico
+- Es un evento único o muy acotado
+- Es una obra, película, serie o producto concreto
+- Es demasiado local o específica para generar diversidad
+
+Si el texto no parece una categoría temática reconocible (es incomprensible, son símbolos, palabras sin sentido, o no podés determinar de qué trata), usá el caso "unclear".
+
+Categoría: "${name}"
+
+Si el input es una descripción larga o una oración, extraé un label corto (2-4 palabras, capitalizado) que represente la categoría de forma concisa e incluilo en la respuesta válida.
+
+Respondé SOLO con JSON válido, sin texto adicional. Tres posibles respuestas:
+{"valid":true,"reason":"una oración corta en español","label":"Nombre corto si el input era largo, o null si ya era conciso"}
+{"valid":false,"reason":"una oración corta en español","suggestion":"versión más amplia o null"}
+{"unclear":true,"reason":"No entiendo la categoría propuesta. Intentá describirla con otras palabras."}`;
+
+  const response = await fetch(GROQ_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.groqKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: env.groqModelChat,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.2,
+      max_tokens: 120,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Groq validate error ${response.status}: ${text}`);
+  }
+
+  const json = await response.json();
+  const content = json.choices?.[0]?.message?.content ?? '';
+  const match = content.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('Respuesta inválida del validador');
+  return JSON.parse(match[0]);
+}
+
 export async function generateTopic({ date, recentTitles = [], interests = [] }) {
   const avoidLine = recentTitles.length > 0
     ? `\nTemas recientes a NO repetir: ${recentTitles.join(', ')}.`
     : '';
 
+  const categoryLabels = interests.map(i => CATEGORIES[i]?.label ?? i);
   const interestsLine = interests.length > 0
-    ? `\nEl tema DEBE pertenecer a alguna de estas categorías: ${interests.map(i => CATEGORIES[i]?.prompt ?? i).join(', ')}. No generes temas fuera de estas categorías.`
+    ? `\nEl tema DEBE pertenecer a alguna de estas categorías: ${interests.map(i => CATEGORIES[i]?.prompt ?? i).join(', ')}. No generes temas fuera de estas categorías.\nEl campo "primaryTag" DEBE ser exactamente uno de estos valores (sin modificar): ${categoryLabels.join(', ')}.`
     : '';
 
   const userPrompt = `Generá un tema educativo para el día ${date}.${avoidLine}${interestsLine}`;
