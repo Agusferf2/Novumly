@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { apiFetch } from '../lib/apiClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import {
@@ -23,8 +23,7 @@ export default function Onboarding() {
 
   // Guard: si ya tiene categorías no debería estar acá
   if (user?.interests?.length > 0) {
-    navigate('/today', { replace: true });
-    return null;
+    return <Navigate to="/today" replace />;
   }
 
   const [selected, setSelected] = useState([]);

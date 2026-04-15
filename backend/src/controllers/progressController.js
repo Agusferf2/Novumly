@@ -76,13 +76,26 @@ export async function getRecent(req, res, next) {
     const feedKey = user?.feedKey || 'global';
 
     const dates = userDays.map(ud => ud.date);
-    const dailyTopics = await DailyTopic.find({
+
+    // Buscar topics del feedKey actual
+    const topicsCurrentFeed = await DailyTopic.find({
       date: { $in: dates },
       feedKey,
     }).select('date title primaryTag');
 
     const topicByDate = {};
-    for (const t of dailyTopics) topicByDate[t.date] = t;
+    for (const t of topicsCurrentFeed) topicByDate[t.date] = t;
+
+    // Para fechas sin topic (feedKey histórico distinto), buscar cualquier topic de ese día
+    const missingDates = dates.filter(d => !topicByDate[d]);
+    if (missingDates.length > 0) {
+      const fallbackTopics = await DailyTopic.find({
+        date: { $in: missingDates },
+      }).select('date title primaryTag');
+      for (const t of fallbackTopics) {
+        if (!topicByDate[t.date]) topicByDate[t.date] = t;
+      }
+    }
 
     const topics = dates
       .filter(date => topicByDate[date])

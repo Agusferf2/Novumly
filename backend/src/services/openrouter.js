@@ -142,6 +142,9 @@ Una categoría NO ES VÁLIDA si:
 - Es un evento único o muy acotado
 - Es una obra, película, serie o producto concreto
 - Es demasiado local o específica para generar diversidad
+- Contiene contenido para adultos, sexual, violento o explícito
+- Promueve odio, discriminación, actividades ilegales o daño a personas
+- Es ofensiva, inapropiada o no apta para una app educativa general
 
 Si el texto no parece una categoría temática reconocible (es incomprensible, son símbolos, palabras sin sentido, o no podés determinar de qué trata), usá el caso "unclear".
 

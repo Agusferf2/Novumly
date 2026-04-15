@@ -2,6 +2,7 @@ import { User }        from '../models/User.js';
 import { DailyTopic }  from '../models/DailyTopic.js';
 import { ChatMessage } from '../models/ChatMessage.js';
 import { chatWithGroq } from '../services/openrouter.js';
+import { getTodayString } from '../lib/date.js';
 
 const MAX_QUESTIONS = 5;
 
@@ -34,6 +35,15 @@ export async function sendMessage(req, res, next) {
       });
     }
 
+    // Limpieza lazy: borrar mensajes de días anteriores al enviar el primer mensaje del día
+    const today = getTodayString();
+    if (date === today) {
+      const hasToday = await ChatMessage.exists({ userId: req.userId, date: today });
+      if (!hasToday) {
+        await ChatMessage.deleteMany({ userId: req.userId, date: { $lt: today } });
+      }
+    }
+
     // Enforce 5-question daily limit
     const userCount = await ChatMessage.countDocuments({
       userId: req.userId,
@@ -48,9 +58,15 @@ export async function sendMessage(req, res, next) {
       });
     }
 
-    // Fetch topic for context (must exist)
+    // Fetch topic for context (con fallback igual que getByDate)
     const user = await User.findById(req.userId).select('feedKey');
-    const topic = await DailyTopic.findOne({ date, feedKey: user.feedKey });
+    let topic = await DailyTopic.findOne({ date, feedKey: user.feedKey });
+    if (!topic && user.feedKey !== 'global') {
+      topic = await DailyTopic.findOne({ date, feedKey: 'global' });
+    }
+    if (!topic) {
+      topic = await DailyTopic.findOne({ date });
+    }
 
     if (!topic) {
       return res.status(404).json({

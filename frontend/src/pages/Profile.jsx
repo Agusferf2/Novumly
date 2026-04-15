@@ -139,14 +139,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Notificaciones */}
-        <div className="bg-white dark:bg-[#252220] rounded-2xl px-5 py-4 flex items-center justify-between">
-          <p className="text-sm text-[#2F2F2F] dark:text-[#EDE9E1]">Notificaciones</p>
-          <div className="w-11 h-6 bg-[rgba(47,47,47,0.15)] dark:bg-[rgba(255,255,255,0.15)] rounded-full relative cursor-default">
-            <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white dark:bg-[#EDE9E1] rounded-full shadow-sm" />
-          </div>
-        </div>
-
         {/* Cerrar sesión */}
         <button
           onClick={handleLogout}

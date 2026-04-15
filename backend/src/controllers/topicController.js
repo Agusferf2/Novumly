@@ -41,7 +41,17 @@ export async function getByDate(req, res, next) {
       });
     }
     const user = await User.findById(req.userId).select('feedKey');
-    const topic = await DailyTopic.findOne({ date, feedKey: user.feedKey });
+
+    // Buscar con feedKey actual; si no existe, caer a 'global'
+    let topic = await DailyTopic.findOne({ date, feedKey: user.feedKey });
+    if (!topic && user.feedKey !== 'global') {
+      topic = await DailyTopic.findOne({ date, feedKey: 'global' });
+    }
+    // Último recurso: cualquier topic de ese día (cubre feedKeys históricos)
+    if (!topic) {
+      topic = await DailyTopic.findOne({ date });
+    }
+
     if (!topic) {
       return res.status(404).json({
         ok: false,

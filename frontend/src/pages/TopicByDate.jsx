@@ -15,8 +15,14 @@ function formatDate(dateStr) {
   }).format(new Date(y, m - 1, d));
 }
 
+function getTodayLocal() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 export default function TopicByDate() {
   const { date } = useParams();
+  const isToday = date === getTodayLocal();
 
   const [topic,   setTopic]   = useState(null);
   const [isRead,  setIsRead]  = useState(false);
@@ -95,13 +101,15 @@ export default function TopicByDate() {
 
             <KeyPoints keyPoints={topic.keyPoints} />
 
-            <button
-              onClick={handleMarkRead}
-              disabled={isRead || marking}
-              className="w-full h-12 bg-[#969B92] text-white font-medium rounded-2xl text-[15px] disabled:opacity-60 transition-opacity duration-150 mt-2"
-            >
-              {isRead ? '✓ Leído' : marking ? 'Guardando...' : 'Marcar como leído'}
-            </button>
+            {isToday && (
+              <button
+                onClick={handleMarkRead}
+                disabled={isRead || marking}
+                className="w-full h-12 bg-[#969B92] text-white font-medium rounded-2xl text-[15px] disabled:opacity-60 transition-opacity duration-150 mt-2"
+              >
+                {isRead ? '✓ Leído' : marking ? 'Guardando...' : 'Marcar como leído'}
+              </button>
+            )}
 
             <div className="h-2" />
           </div>
