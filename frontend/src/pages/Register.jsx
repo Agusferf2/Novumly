@@ -30,7 +30,7 @@ export default function Register() {
         body: JSON.stringify({ email, password }),
       });
       await login(token);
-      navigate('/today');
+      navigate('/onboarding');
     } catch (err) {
       setError(err.message);
     } finally {
