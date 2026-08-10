@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/apiClient.js';
+import Loader from './Loader.jsx';
 
 const CLOSE_THRESHOLD = 80; // px dragged down to trigger close
 
@@ -133,7 +134,7 @@ export default function DayBottomSheet({ date, onClose }) {
           {/* Loading */}
           {loading && (
             <div className="py-8 flex items-center justify-center">
-              <p className="text-[#969B92] text-sm">Cargando...</p>
+              <Loader size="sm" />
             </div>
           )}
 

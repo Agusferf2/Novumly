@@ -4,7 +4,12 @@
     <script>
       (function () {
         var t = localStorage.getItem('theme') || 'light';
-        if (t === 'dark') document.documentElement.classList.add('dark');
+        if (t === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.background = '#1A1814';
+        } else {
+          document.documentElement.style.background = '#F4F1EA';
+        }
       })();
     </script>
     <meta charset="UTF-8" />

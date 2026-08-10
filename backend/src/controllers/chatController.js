@@ -2,6 +2,7 @@ import { and, asc, count, eq, sql } from 'drizzle-orm';
 import { chatMessages, dailyTopics, users } from '../db/schema.js';
 import { db } from '../lib/db.js';
 import { chatWithGroq } from '../services/openrouter.js';
+import { getTodayString } from '../lib/date.js';
 
 const MAX_QUESTIONS = 5;
 
@@ -31,6 +32,7 @@ export async function sendMessage(req, res, next) {
       return res.status(400).json({ ok: false, error: { code: 'INVALID_INPUT', message: 'question is required' } });
     }
 
+<<<<<<< HEAD
     const whereUserQuestion = and(
       eq(chatMessages.userId, req.userId),
       eq(chatMessages.date, date),
@@ -63,12 +65,65 @@ export async function sendMessage(req, res, next) {
         { userId: req.userId, date, role: 'assistant', content: answer },
       ]);
       return value + 1;
+=======
+    // Limpieza lazy: borrar mensajes de días anteriores al enviar el primer mensaje del día
+    const today = getTodayString();
+    if (date === today) {
+      const hasToday = await ChatMessage.exists({ userId: req.userId, date: today });
+      if (!hasToday) {
+        await ChatMessage.deleteMany({ userId: req.userId, date: { $lt: today } });
+      }
+    }
+
+    // Enforce 5-question daily limit
+    const userCount = await ChatMessage.countDocuments({
+      userId: req.userId,
+      date,
+      role: 'user',
+>>>>>>> 286e0078119708acc49e8dc7a295917eeb83f150
     });
 
     if (finalCount === null) {
       return res.status(429).json({ ok: false, error: { code: 'LIMIT_REACHED', message: 'Daily question limit reached' } });
     }
+<<<<<<< HEAD
     res.json({ ok: true, data: { answer, questionsLeft: MAX_QUESTIONS - finalCount } });
+=======
+
+    // Fetch topic for context (con fallback igual que getByDate)
+    const user = await User.findById(req.userId).select('feedKey');
+    let topic = await DailyTopic.findOne({ date, feedKey: user.feedKey });
+    if (!topic && user.feedKey !== 'global') {
+      topic = await DailyTopic.findOne({ date, feedKey: 'global' });
+    }
+    if (!topic) {
+      topic = await DailyTopic.findOne({ date });
+    }
+
+    if (!topic) {
+      return res.status(404).json({
+        ok: false,
+        error: { code: 'NOT_FOUND', message: 'No topic for this date' },
+      });
+    }
+
+    // Fetch chat history to give the model context
+    const history = await ChatMessage.find({ userId: req.userId, date })
+      .sort({ createdAt: 1 })
+      .select('role content');
+
+    // Call Groq
+    const answer = await chatWithGroq({ topic, history, question: question.trim() });
+
+    // Persist both messages
+    await ChatMessage.insertMany([
+      { userId: req.userId, date, role: 'user',      content: question.trim() },
+      { userId: req.userId, date, role: 'assistant', content: answer },
+    ]);
+
+    const questionsLeft = Math.max(0, MAX_QUESTIONS - userCount - 1);
+    res.json({ ok: true, data: { answer, questionsLeft } });
+>>>>>>> 286e0078119708acc49e8dc7a295917eeb83f150
   } catch (err) {
     next(err);
   }

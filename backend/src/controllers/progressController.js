@@ -48,12 +48,58 @@ export async function getRecent(req, res, next) {
       .where(eq(userDays.userId, req.userId)).orderBy(desc(userDays.date)).limit(limit);
     if (days.length === 0) return res.json({ ok: true, data: { topics: [] } });
 
+<<<<<<< HEAD
     const [user] = await db.select({ feedKey: users.feedKey }).from(users).where(eq(users.id, req.userId)).limit(1);
     const dates = days.map(day => day.date);
     const topics = await db.select({ date: dailyTopics.date, title: dailyTopics.title, primaryTag: dailyTopics.primaryTag })
       .from(dailyTopics).where(and(inArray(dailyTopics.date, dates), eq(dailyTopics.feedKey, user?.feedKey || 'global')));
     const byDate = new Map(topics.map(topic => [topic.date, topic]));
     res.json({ ok: true, data: { topics: dates.map(date => byDate.get(date)).filter(Boolean) } });
+=======
+    const userDays = await UserDay.find({ userId: req.userId })
+      .sort({ date: -1 })
+      .limit(limit)
+      .select('date');
+
+    if (userDays.length === 0) {
+      return res.json({ ok: true, data: { topics: [] } });
+    }
+
+    const user = await User.findById(req.userId).select('feedKey');
+    const feedKey = user?.feedKey || 'global';
+
+    const dates = userDays.map(ud => ud.date);
+
+    // Buscar topics del feedKey actual
+    const topicsCurrentFeed = await DailyTopic.find({
+      date: { $in: dates },
+      feedKey,
+    }).select('date title primaryTag');
+
+    const topicByDate = {};
+    for (const t of topicsCurrentFeed) topicByDate[t.date] = t;
+
+    // Para fechas sin topic (feedKey histórico distinto), buscar cualquier topic de ese día
+    const missingDates = dates.filter(d => !topicByDate[d]);
+    if (missingDates.length > 0) {
+      const fallbackTopics = await DailyTopic.find({
+        date: { $in: missingDates },
+      }).select('date title primaryTag');
+      for (const t of fallbackTopics) {
+        if (!topicByDate[t.date]) topicByDate[t.date] = t;
+      }
+    }
+
+    const topics = dates
+      .filter(date => topicByDate[date])
+      .map(date => ({
+        date,
+        title: topicByDate[date].title,
+        primaryTag: topicByDate[date].primaryTag,
+      }));
+
+    res.json({ ok: true, data: { topics } });
+>>>>>>> 286e0078119708acc49e8dc7a295917eeb83f150
   } catch (err) {
     next(err);
   }

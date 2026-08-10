@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { apiFetch } from '../lib/apiClient.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import KeyPoints from '../components/KeyPoints.jsx';
 import ChatDock from '../components/ChatDock.jsx';
 import BottomNav from '../components/BottomNav.jsx';
+import Loader from '../components/Loader.jsx';
 import logo from '../../assets/Logo.png';
 
 function formatDate(dateStr) {
@@ -15,6 +17,7 @@ function formatDate(dateStr) {
 }
 
 export default function Today() {
+  const { user } = useAuth();
   const [topic,   setTopic]   = useState(null);
   const [isRead,  setIsRead]  = useState(false);
   const [loading, setLoading] = useState(true);
@@ -31,6 +34,16 @@ export default function Today() {
       })
       .finally(()  => setLoading(false));
   }, []);
+
+  function handleShare() {
+    if (!topic) return;
+    const text = `"${topic.title}"\nLeelo en Novumly, la app de aprendizaje diario.`;
+    if (navigator.share) {
+      navigator.share({ title: topic.title, text, url: 'https://novumly.app' }).catch(() => {});
+    } else {
+      navigator.clipboard?.writeText(`${text}\nhttps://novumly.app`);
+    }
+  }
 
   async function handleMarkRead() {
     setMarking(true);
@@ -59,8 +72,8 @@ export default function Today() {
       <main className="flex-1 overflow-y-auto px-5 py-6">
 
         {loading && (
-          <div className="flex items-center justify-center h-40">
-            <p className="text-[#6B7280] dark:text-[#9CA3AF] text-sm">Cargando...</p>
+          <div className="flex items-center justify-center h-48">
+            <Loader label="Generando el tema del día" />
           </div>
         )}
 
@@ -82,7 +95,9 @@ export default function Today() {
 
             {/* Tag */}
             <span className="inline-block text-xs font-medium text-[#969B92] bg-white dark:bg-[#252220] border border-[rgba(47,47,47,0.10)] dark:border-[rgba(255,255,255,0.10)] px-3 py-1 rounded-full uppercase tracking-[0.05em]">
-              {topic.primaryTag}
+              {(user?.interests?.length > 0 && !user.interests.map(i => i.toLowerCase()).includes(topic.primaryTag.toLowerCase()))
+                ? user.interests[0]
+                : topic.primaryTag}
             </span>
 
             {/* Título */}
@@ -90,11 +105,24 @@ export default function Today() {
               {topic.title}
             </h1>
 
-            {/* Fecha */}
-            <p className="text-sm text-[#969B92] flex items-center gap-1.5">
-              <span>🕐</span>
-              {formatDate(topic.date)}
-            </p>
+            {/* Fecha + compartir */}
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[#969B92] flex items-center gap-1.5">
+                <span>🕐</span>
+                {formatDate(topic.date)}
+              </p>
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-1.5 text-xs text-[#969B92] hover:text-[#BFA56A] transition-colors px-2 py-1"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                Compartir
+              </button>
+            </div>
 
             {/* Resume */}
             <div className="text-[#2F2F2F] dark:text-[#EDE9E1] text-[16px] leading-[1.75] space-y-4">
