@@ -30,8 +30,8 @@ Aplicación web **mobile-first (PWA)** donde el usuario recibe un tema educativo
 
 - Node.js
 - Express
-- MongoDB
-- Mongoose
+- Neon Postgres
+- Drizzle ORM
 - JWT
 
 ### IA
@@ -123,12 +123,24 @@ Máximo 5 preguntas por día.
 ## Variables de Entorno (backend)
 
 ```env
-MONGO_URI=
+DATABASE_URL=postgresql://...
+DATABASE_URL_UNPOOLED=postgresql://...
 JWT_SECRET=
-OPENROUTER_API_KEY=
-OPENROUTER_MODEL=openai/gpt-oss-120b:free
+GROQ_API_KEY=
+GROQ_MODEL_TOPIC=
+GROQ_MODEL_CHAT=
+ADMIN_KEY=
 PORT=4000
 ```
+
+Para crear o actualizar el esquema en Neon:
+
+```bash
+npm run db:migrate --prefix backend
+```
+
+Usá la URL agrupada de Neon en `DATABASE_URL` para la aplicación y la URL directa en
+`DATABASE_URL_UNPOOLED` para las migraciones.
 
 ---
 

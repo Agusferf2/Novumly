@@ -71,6 +71,6 @@ connectDB()
     });
   })
   .catch((e) => {
-    console.error('[db] Failed to connect to MongoDB:', e);
+    console.error('[db] Failed to connect to Neon Postgres:', e);
     process.exit(1);
   });

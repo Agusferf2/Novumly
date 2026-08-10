@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 const REQUIRED = [
-  'MONGO_URI',
+  'DATABASE_URL',
   'JWT_SECRET',
   'GROQ_API_KEY',
   'GROQ_MODEL_TOPIC',
@@ -16,7 +16,7 @@ for (const key of REQUIRED) {
 }
 
 export const env = {
-  mongoUri:        process.env.MONGO_URI,
+  databaseUrl:     process.env.DATABASE_URL,
   jwtSecret:       process.env.JWT_SECRET,
   groqKey:        process.env.GROQ_API_KEY,
   groqModelTopic: process.env.GROQ_MODEL_TOPIC,
