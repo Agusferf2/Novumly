@@ -16,7 +16,9 @@ export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
   email: varchar('email', { length: 320 }).notNull(),
   passwordHash: text('password_hash').notNull(),
-  feedKey: varchar('feed_key', { length: 100 }).notNull().default('global'),
+  feedKey: text('feed_key').notNull().default('global'),
+  interests: jsonb('interests').notNull().default([]),
+  feedKeyAppliesDate: date('feed_key_applies_date', { mode: 'string' }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, table => [
@@ -26,7 +28,7 @@ export const users = pgTable('users', {
 export const dailyTopics = pgTable('daily_topics', {
   id: uuid('id').defaultRandom().primaryKey(),
   date: date('date', { mode: 'string' }).notNull(),
-  feedKey: varchar('feed_key', { length: 100 }).notNull().default('global'),
+  feedKey: text('feed_key').notNull().default('global'),
   topicKey: varchar('topic_key', { length: 250 }).notNull(),
   primaryTag: varchar('primary_tag', { length: 100 }).notNull(),
   title: text('title').notNull(),

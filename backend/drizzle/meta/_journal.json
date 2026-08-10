@@ -8,6 +8,13 @@
       "when": 1786328255834,
       "tag": "0000_skinny_shinko_yamashiro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786333633652,
+      "tag": "0001_tricky_praxagora",
+      "breakpoints": true
     }
   ]
 }

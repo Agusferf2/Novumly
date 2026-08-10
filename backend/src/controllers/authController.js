@@ -4,13 +4,19 @@ import { eq } from 'drizzle-orm';
 import { users } from '../db/schema.js';
 import { db } from '../lib/db.js';
 import { env } from '../lib/env.js';
-import { VALID_INTERESTS, computeFeedKey } from '../lib/categories.js';
 import { getTomorrowString } from '../lib/date.js';
 import { validateCategory } from '../services/openrouter.js';
 
 function signToken(userId) {
   return jwt.sign({ userId }, env.jwtSecret, { expiresIn: '30d' });
 }
+
+const publicUserFields = {
+  email: users.email,
+  feedKey: users.feedKey,
+  interests: users.interests,
+  feedKeyAppliesDate: users.feedKeyAppliesDate,
+};
 
 export async function register(req, res, next) {
   try {
@@ -32,7 +38,7 @@ export async function register(req, res, next) {
     const [user] = await db.insert(users).values({ email: normalizedEmail, passwordHash }).returning({ id: users.id });
     res.status(201).json({ ok: true, data: { token: signToken(user.id) } });
   } catch (err) {
-    if (err.code === '23505') {
+    if (err.code === '23505' || err.cause?.code === '23505') {
       return res.status(409).json({ ok: false, error: { code: 'EMAIL_TAKEN', message: 'Email already in use' } });
     }
     next(err);
@@ -51,7 +57,6 @@ export async function login(req, res, next) {
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return res.status(401).json({ ok: false, error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' } });
     }
-
     res.json({ ok: true, data: { token: signToken(user.id) } });
   } catch (err) {
     next(err);
@@ -60,19 +65,9 @@ export async function login(req, res, next) {
 
 export async function me(req, res, next) {
   try {
-<<<<<<< HEAD
-    const [user] = await db.select({ email: users.email, feedKey: users.feedKey })
-      .from(users).where(eq(users.id, req.userId)).limit(1);
-=======
-    const user = await User.findById(req.userId).select('email feedKey interests feedKeyAppliesDate');
->>>>>>> 286e0078119708acc49e8dc7a295917eeb83f150
-    if (!user) {
-      return res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'User not found' } });
-    }
-<<<<<<< HEAD
+    const [user] = await db.select(publicUserFields).from(users).where(eq(users.id, req.userId)).limit(1);
+    if (!user) return res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'User not found' } });
     res.json({ ok: true, data: user });
-=======
-    res.json({ ok: true, data: { email: user.email, feedKey: user.feedKey, interests: user.interests, feedKeyAppliesDate: user.feedKeyAppliesDate } });
   } catch (err) {
     next(err);
   }
@@ -82,13 +77,9 @@ export async function validateCategoryController(req, res, next) {
   try {
     const { name } = req.body;
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
-      return res.status(400).json({
-        ok: false,
-        error: { code: 'VALIDATION_ERROR', message: 'Nombre inválido' },
-      });
+      return res.status(400).json({ ok: false, error: { code: 'VALIDATION_ERROR', message: 'Nombre inválido' } });
     }
-    const result = await validateCategory(name.trim());
-    res.json({ ok: true, data: result });
+    res.json({ ok: true, data: await validateCategory(name.trim()) });
   } catch (err) {
     next(err);
   }
@@ -97,39 +88,22 @@ export async function validateCategoryController(req, res, next) {
 export async function updateMe(req, res, next) {
   try {
     const { interests } = req.body;
-
-    const MAX_INTERESTS = 5;
-
     if (!Array.isArray(interests) || interests.length === 0) {
-      return res.status(400).json({
-        ok: false,
-        error: { code: 'VALIDATION_ERROR', message: 'interests debe ser un array con al menos 1 categoría' },
-      });
+      return res.status(400).json({ ok: false, error: { code: 'VALIDATION_ERROR', message: 'interests debe ser un array con al menos 1 categoría' } });
+    }
+    if (interests.length > 5) {
+      return res.status(400).json({ ok: false, error: { code: 'VALIDATION_ERROR', message: 'Podés elegir hasta 5 categorías' } });
+    }
+    const normalized = interests.map(interest => typeof interest === 'string' ? interest.trim() : interest);
+    if (normalized.some(interest => typeof interest !== 'string' || !interest || interest.length > 60)) {
+      return res.status(400).json({ ok: false, error: { code: 'VALIDATION_ERROR', message: 'Una o más categorías tienen formato inválido' } });
     }
 
-    if (interests.length > MAX_INTERESTS) {
-      return res.status(400).json({
-        ok: false,
-        error: { code: 'VALIDATION_ERROR', message: `Podés elegir hasta ${MAX_INTERESTS} categorías` },
-      });
-    }
-
-    const invalid = interests.filter(i => typeof i !== 'string' || !i.trim() || i.length > 60);
-    if (invalid.length > 0) {
-      return res.status(400).json({
-        ok: false,
-        error: { code: 'VALIDATION_ERROR', message: 'Una o más categorías tienen formato inválido' },
-      });
-    }
-
-    const user = await User.findByIdAndUpdate(
-      req.userId,
-      { interests, feedKeyAppliesDate: getTomorrowString() },
-      { new: true, select: 'email feedKey interests feedKeyAppliesDate' }
-    );
-
-    res.json({ ok: true, data: { email: user.email, feedKey: user.feedKey, interests: user.interests, feedKeyAppliesDate: user.feedKeyAppliesDate } });
->>>>>>> 286e0078119708acc49e8dc7a295917eeb83f150
+    const [user] = await db.update(users)
+      .set({ interests: [...new Set(normalized)], feedKeyAppliesDate: getTomorrowString(), updatedAt: new Date() })
+      .where(eq(users.id, req.userId)).returning(publicUserFields);
+    if (!user) return res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'User not found' } });
+    res.json({ ok: true, data: user });
   } catch (err) {
     next(err);
   }
